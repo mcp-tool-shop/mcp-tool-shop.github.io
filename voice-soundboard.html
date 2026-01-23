@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Soundboard - AI Voice Synthesis for Python</title>
+    <meta name="description" content="Open-source text-to-speech with 54+ voices, voice cloning, and MCP integration. Beat ElevenLabs in blind tests. MIT licensed.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e4e4e7;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        code, pre {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #a1a1aa;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            color: #fff;
+        }
+
+        .github-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #a1a1aa;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .github-link:hover {
+            color: #fff;
+        }
+
+        .github-link svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Hero */
+        .hero {
+            padding: 60px 0 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #fff;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .tagline {
+            font-size: 1.25rem;
+            color: #a1a1aa;
+            max-width: 600px;
+            margin: 0 auto 24px;
+        }
+
+        .social-proof {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 24px;
+            font-size: 0.9rem;
+            color: #4ade80;
+            margin-bottom: 32px;
+        }
+
+        /* Install Section */
+        .install-section {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 48px;
+        }
+
+        .install-command {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1a1a2e;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 16px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            margin-bottom: 16px;
+        }
+
+        .install-command code {
+            color: #4ade80;
+        }
+
+        .copy-btn {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            color: #c4b5fd;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(139, 92, 246, 0.3);
+        }
+
+        .install-note {
+            font-size: 0.85rem;
+            color: #71717a;
+            text-align: center;
+        }
+
+        /* Features Grid */
+        .features {
+            margin-bottom: 48px;
+        }
+
+        .features h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: #a1a1aa;
+        }
+
+        /* Code Example */
+        .code-section {
+            margin-bottom: 48px;
+        }
+
+        .code-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .code-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .code-tab {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            color: #a1a1aa;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .code-tab:hover, .code-tab.active {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.4);
+            color: #c4b5fd;
+        }
+
+        .code-block {
+            background: #0d0d14;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #e4e4e7;
+        }
+
+        .code-block .comment { color: #6b7280; }
+        .code-block .keyword { color: #c084fc; }
+        .code-block .string { color: #4ade80; }
+        .code-block .function { color: #60a5fa; }
+
+        /* Comparison */
+        .comparison {
+            margin-bottom: 48px;
+        }
+
+        .comparison h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .comparison-table {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .comparison-table th {
+            background: rgba(0,0,0,0.2);
+            font-weight: 600;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .comparison-table td {
+            font-size: 0.9rem;
+            color: #a1a1aa;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .check { color: #4ade80; }
+        .cross { color: #f87171; }
+
+        /* CTA */
+        .cta {
+            text-align: center;
+            padding: 48px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .cta h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #fff;
+        }
+
+        .cta p {
+            color: #a1a1aa;
+            margin-bottom: 24px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Footer */
+        footer {
+            padding: 24px 0;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        footer p {
+            color: #52525b;
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: #8b5cf6;
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .install-command {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .comparison-table {
+                font-size: 0.85rem;
+            }
+
+            .comparison-table th, .comparison-table td {
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <a href="/" class="logo">MCP Tool Shop</a>
+            <a href="https://github.com/mcp-tool-shop/voice-soundboard" class="github-link">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+                View on GitHub
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Give Your AI a <span>Voice</span></h1>
+                <p class="tagline">Open-source text-to-speech with 54+ voices, voice cloning, and natural emotions. Runs locally. MIT licensed.</p>
+                <div class="social-proof">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/></svg>
+                    Beat ElevenLabs in blind tests (63.8% preference)
+                </div>
+            </div>
+        </section>
+
+        <section class="install-section">
+            <div class="container">
+                <div class="install-command">
+                    <code>pip install voice-soundboard[all]</code>
+                    <button class="copy-btn" onclick="navigator.clipboard.writeText('pip install voice-soundboard[all]'); this.textContent='Copied!'; setTimeout(() => this.textContent='Copy', 2000);">Copy</button>
+                </div>
+                <p class="install-note">Python 3.10+ &middot; Windows, Linux, Mac &middot; CPU or GPU</p>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <h2>Why Voice Soundboard?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>🎙️ 54+ Voices</h3>
+                        <p>American, British, Japanese, Mandarin accents. Male, female, and character voices.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🎭 Natural Emotions</h3>
+                        <p>Generate [laugh], [sigh], [gasp] sounds naturally. 19 emotions with blending.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🔊 Voice Cloning</h3>
+                        <p>Clone any voice from 5 seconds of audio. Speak in 23 languages.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🤖 MCP Integration</h3>
+                        <p>40+ tools for Claude, GPT, and other AI agents. Built for the agentic future.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🎬 Multi-Speaker</h3>
+                        <p>Generate podcasts and audiobooks from scripts with automatic voice assignment.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🔒 100% Local</h3>
+                        <p>No API keys, no cloud, no tracking. Your audio stays on your machine.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="code-section">
+            <div class="container">
+                <h2>Simple API</h2>
+                <div class="code-tabs">
+                    <button class="code-tab active" onclick="showCode('basic')">Basic</button>
+                    <button class="code-tab" onclick="showCode('emotion')">Emotions</button>
+                    <button class="code-tab" onclick="showCode('dialogue')">Dialogue</button>
+                    <button class="code-tab" onclick="showCode('clone')">Clone Voice</button>
+                </div>
+                <div class="code-block">
+                    <pre id="code-basic"><span class="keyword">from</span> voice_soundboard <span class="keyword">import</span> VoiceEngine, play_audio
+
+engine = VoiceEngine()
+result = engine.<span class="function">speak</span>(
+    <span class="string">"Hello! How can I help you today?"</span>,
+    style=<span class="string">"warmly and cheerfully"</span>
+)
+<span class="function">play_audio</span>(result.audio_path)</pre>
+                    <pre id="code-emotion" style="display:none"><span class="comment"># Natural non-speech sounds</span>
+result = engine.<span class="function">speak</span>(
+    <span class="string">"That's hilarious! [laugh] Oh man, [sigh] I needed that."</span>
+)
+
+<span class="comment"># Emotion blending</span>
+<span class="keyword">from</span> voice_soundboard <span class="keyword">import</span> blend_emotions
+blend = <span class="function">blend_emotions</span>([(<span class="string">"happy"</span>, 0.7), (<span class="string">"surprised"</span>, 0.3)])
+<span class="comment"># Result: pleasant_surprise</span></pre>
+                    <pre id="code-dialogue" style="display:none"><span class="comment"># Multi-speaker dialogue from script</span>
+script = <span class="string">"""
+[host] Welcome to the show!
+[guest] (excited) Thanks for having me!
+[host] Let's dive right in.
+"""</span>
+
+result = <span class="keyword">await</span> engine.<span class="function">speak_dialogue</span>(
+    script,
+    voices={<span class="string">"host"</span>: <span class="string">"bm_george"</span>, <span class="string">"guest"</span>: <span class="string">"af_bella"</span>}
+)
+<span class="function">play_audio</span>(result.audio_path)</pre>
+                    <pre id="code-clone" style="display:none"><span class="comment"># Clone a voice from 5 seconds of audio</span>
+<span class="keyword">from</span> voice_soundboard <span class="keyword">import</span> clone_voice
+
+my_voice = <span class="function">clone_voice</span>(
+    <span class="string">"sample.wav"</span>,
+    consent_given=<span class="keyword">True</span>
+)
+
+<span class="comment"># Speak in any language with your voice</span>
+engine.<span class="function">speak</span>(<span class="string">"Bonjour!"</span>, voice=my_voice, language=<span class="string">"fr"</span>)
+engine.<span class="function">speak</span>(<span class="string">"Guten Tag!"</span>, voice=my_voice, language=<span class="string">"de"</span>)</pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="comparison">
+            <div class="container">
+                <h2>How It Compares</h2>
+                <div class="comparison-table">
+                    <table>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Voice Soundboard</th>
+                            <th>ElevenLabs</th>
+                            <th>Coqui TTS</th>
+                        </tr>
+                        <tr>
+                            <td>Price</td>
+                            <td><span class="check">Free</span></td>
+                            <td>$5-330/mo</td>
+                            <td><span class="check">Free</span></td>
+                        </tr>
+                        <tr>
+                            <td>Runs Locally</td>
+                            <td><span class="check">✓</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Voice Cloning</td>
+                            <td><span class="check">✓</span></td>
+                            <td><span class="check">✓</span></td>
+                            <td><span class="check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>MCP Integration</td>
+                            <td><span class="check">✓ 40+ tools</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>Commercial Use</td>
+                            <td><span class="check">MIT License</span></td>
+                            <td>Paid plans</td>
+                            <td><span class="cross">Non-commercial</span></td>
+                        </tr>
+                        <tr>
+                            <td>Still Maintained</td>
+                            <td><span class="check">✓</span></td>
+                            <td><span class="check">✓</span></td>
+                            <td><span class="cross">Shut down Dec 2025</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <div class="container">
+                <h2>Ready to Get Started?</h2>
+                <p>Install in seconds. Start generating voice in minutes.</p>
+                <div class="cta-buttons">
+                    <a href="https://github.com/mcp-tool-shop/voice-soundboard" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                        View on GitHub
+                    </a>
+                    <a href="https://pypi.org/project/voice-soundboard/" class="btn btn-secondary">
+                        View on PyPI
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p><a href="/">MCP Tool Shop</a> &copy; 2026 &middot; MIT License</p>
+        </div>
+    </footer>
+
+    <script>
+        function showCode(tab) {
+            // Hide all code blocks
+            document.querySelectorAll('.code-block pre').forEach(el => el.style.display = 'none');
+            // Show selected
+            document.getElementById('code-' + tab).style.display = 'block';
+            // Update tabs
+            document.querySelectorAll('.code-tab').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
