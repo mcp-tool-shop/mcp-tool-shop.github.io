@@ -1,0 +1,46 @@
+# MCP Tool Shop
+
+> AI tools for developers — Organization website and documentation hub
+
+## Overview
+
+This is the GitHub Pages website for the MCP Tool Shop organization. It provides documentation, guides, and resources for all MCP Tool Shop projects.
+
+## Organization
+
+MCP Tool Shop builds production-grade MCP servers for the agentic future:
+
+### Discovery & Orchestration
+- **Tool Compass** — Semantic MCP tool discovery (115+ tools)
+- **File Compass** — Semantic file search with HNSW indexing
+
+### AI Generation
+- **Comfy-Headless** — Production ComfyUI client with video generation
+- **Backpropagate** — Headless LLM fine-tuning framework
+- **Voice Soundboard** — AI-powered TTS with 54+ voices
+
+### Code Intelligence
+- **Dev-Brain** — MCP server for test generation, security audits
+- **Integradio** — Vector-embedded Gradio components
+
+### Security
+- **Tool-Scan** — Security scanner for MCP tools
+- **MCP-Stress-Test** — Red team toolkit for scanner testing
+
+### Infrastructure
+- **Context Window Manager** — Lossless context restoration via KV cache
+- **Headless Wheel Builder** — Universal Python wheel builder
+- **Claude Collaborate** — Human-AI collaboration sandbox
+
+### Research
+- **ASPIRE-AI** — Teaching AI judgment through adversarial mentorship
+
+## Links
+
+- Organization: https://github.com/mcp-tool-shop
+- Website: https://mcp-tool-shop.github.io
+- All Repositories: https://github.com/orgs/mcp-tool-shop/repositories
+
+## License
+
+MIT License
