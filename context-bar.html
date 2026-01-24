@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Context Bar - Real-Time Context Monitoring for Claude Code</title>
+    <meta name="description" content="Visual context monitoring with checkpoints and alerts. Know exactly when you're approaching context limits. MIT licensed.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e4e4e7;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        code, pre { font-family: 'JetBrains Mono', monospace; }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+        header { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1rem; font-weight: 600; color: #a1a1aa; text-decoration: none; }
+        .logo:hover { color: #fff; }
+        .github-link { display: flex; align-items: center; gap: 8px; color: #a1a1aa; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        .github-link:hover { color: #fff; }
+        .github-link svg { width: 20px; height: 20px; fill: currentColor; }
+
+        .hero { padding: 60px 0 40px; text-align: center; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 16px; color: #fff; }
+        .hero h1 span { background: linear-gradient(135deg, #ef4444 0%, #f87171 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero .tagline { font-size: 1.25rem; color: #a1a1aa; max-width: 600px; margin: 0 auto 24px; }
+        .social-proof { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 24px; font-size: 0.9rem; color: #f87171; margin-bottom: 32px; }
+
+        .context-demo { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 24px; margin-bottom: 48px; text-align: center; }
+        .context-bar { background: rgba(0,0,0,0.5); border-radius: 8px; height: 32px; overflow: hidden; margin-bottom: 16px; position: relative; }
+        .context-fill { height: 100%; background: linear-gradient(90deg, #22c55e 0%, #eab308 50%, #ef4444 100%); width: 48%; transition: width 0.5s; border-radius: 8px 0 0 8px; }
+        .context-label { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #fff; }
+        .context-info { font-size: 0.9rem; color: #a1a1aa; }
+        .context-info strong { color: #4ade80; }
+
+        .install-section { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 24px; margin-bottom: 48px; }
+        .install-command { display: flex; align-items: center; justify-content: space-between; background: #1a1a2e; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px 20px; font-family: 'JetBrains Mono', monospace; font-size: 1rem; margin-bottom: 16px; }
+        .install-command code { color: #f87171; }
+        .copy-btn { background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+        .copy-btn:hover { background: rgba(239, 68, 68, 0.3); }
+        .install-note { font-size: 0.85rem; color: #71717a; text-align: center; }
+
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-bottom: 48px; }
+        .feature { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; }
+        .feature h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; color: #fff; }
+        .feature p { font-size: 0.95rem; color: #a1a1aa; }
+
+        .alert-levels { margin-bottom: 48px; }
+        .alert-levels h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 24px; text-align: center; color: #fff; }
+        .levels-grid { display: grid; gap: 12px; }
+        .level { display: flex; align-items: center; gap: 16px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px 20px; }
+        .level-indicator { width: 12px; height: 12px; border-radius: 50%; }
+        .level-indicator.info { background: #3b82f6; }
+        .level-indicator.warning { background: #eab308; }
+        .level-indicator.critical { background: #f97316; }
+        .level-indicator.emergency { background: #ef4444; }
+        .level-indicator.capacity { background: #dc2626; }
+        .level-name { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #fff; min-width: 100px; }
+        .level-threshold { color: #a1a1aa; font-size: 0.9rem; min-width: 80px; }
+        .level-desc { color: #71717a; font-size: 0.85rem; }
+
+        .tools-section { margin-bottom: 48px; }
+        .tools-section h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 24px; text-align: center; color: #fff; }
+        .tools-grid { display: grid; gap: 12px; }
+        .tool { display: flex; align-items: center; gap: 16px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px 20px; }
+        .tool-name { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #f87171; min-width: 160px; }
+        .tool-desc { color: #a1a1aa; font-size: 0.9rem; }
+
+        footer { padding: 32px 0; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: #71717a; font-size: 0.85rem; }
+        footer a { color: #a1a1aa; text-decoration: none; }
+        footer a:hover { color: #fff; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">MCP Tool Shop</a>
+                <a href="https://github.com/mcp-tool-shop/context-bar" class="github-link">
+                    <svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    View on GitHub
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Context <span>Bar</span></h1>
+                <p class="tagline">Real-time context monitoring with checkpoints and alerts. Know exactly when you're approaching limits.</p>
+                <div class="social-proof">Visual progress bar | Desktop notifications | Auto-checkpoints</div>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="context-demo">
+                <div class="context-bar">
+                    <div class="context-fill"></div>
+                    <span class="context-label">48%</span>
+                </div>
+                <p class="context-info"><strong>Phase 1</strong> | ~5,200 tokens remaining | Claude-Fresh in ~2 turns</p>
+            </div>
+        </div>
+
+        <section class="install-section">
+            <div class="container">
+                <div class="install-command">
+                    <code>pip install context-bar</code>
+                    <button class="copy-btn" onclick="navigator.clipboard.writeText('pip install context-bar')">Copy</button>
+                </div>
+                <p class="install-note">Works with Claude Code and other MCP clients</p>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="features">
+                <div class="feature">
+                    <h3>Visual Progress</h3>
+                    <p>Real-time context bar showing usage percentage. Know at a glance how much context remains.</p>
+                </div>
+                <div class="feature">
+                    <h3>Smart Alerts</h3>
+                    <p>Configurable thresholds with desktop notifications and optional beeps. Never miss a warning.</p>
+                </div>
+                <div class="feature">
+                    <h3>Auto-Checkpoints</h3>
+                    <p>Automatically save session state at configurable thresholds. Never lose context unexpectedly.</p>
+                </div>
+                <div class="feature">
+                    <h3>Handoff Notes</h3>
+                    <p>Generate handoff summaries for session continuity. Pick up exactly where you left off.</p>
+                </div>
+                <div class="feature">
+                    <h3>Checkpoint Types</h3>
+                    <p>Different retention policies: continue, session_end, manual. Explicit saves kept longest.</p>
+                </div>
+                <div class="feature">
+                    <h3>Phase Awareness</h3>
+                    <p>Track Phase 1 (optimal) vs Phase 2 (degrading). Know when Claude is at peak performance.</p>
+                </div>
+            </div>
+
+            <div class="alert-levels">
+                <h2>Alert Levels</h2>
+                <div class="levels-grid">
+                    <div class="level">
+                        <span class="level-indicator info"></span>
+                        <span class="level-name">Info</span>
+                        <span class="level-threshold">40%</span>
+                        <span class="level-desc">Approaching mid-context, still in Phase 1</span>
+                    </div>
+                    <div class="level">
+                        <span class="level-indicator warning"></span>
+                        <span class="level-name">Warning</span>
+                        <span class="level-threshold">50%</span>
+                        <span class="level-desc">Optimal checkpoint point, consider saving</span>
+                    </div>
+                    <div class="level">
+                        <span class="level-indicator critical"></span>
+                        <span class="level-name">Critical</span>
+                        <span class="level-threshold">70%</span>
+                        <span class="level-desc">Entering Phase 2, degradation may begin</span>
+                    </div>
+                    <div class="level">
+                        <span class="level-indicator emergency"></span>
+                        <span class="level-name">Emergency</span>
+                        <span class="level-threshold">85%</span>
+                        <span class="level-desc">Serious degradation, save immediately</span>
+                    </div>
+                    <div class="level">
+                        <span class="level-indicator capacity"></span>
+                        <span class="level-name">Capacity</span>
+                        <span class="level-threshold">95%</span>
+                        <span class="level-desc">Context nearly full, auto-compact imminent</span>
+                    </div>
+                </div>
+            </div>
+
+            <section class="tools-section">
+                <h2>MCP Tools</h2>
+                <div class="tools-grid">
+                    <div class="tool">
+                        <span class="tool-name">context_status</span>
+                        <span class="tool-desc">Get current usage with visual bar and statistics</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">checkpoint_save</span>
+                        <span class="tool-desc">Save a manual checkpoint of current session state</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">checkpoint_load</span>
+                        <span class="tool-desc">Load a checkpoint by ID or get the latest</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">checkpoint_list</span>
+                        <span class="tool-desc">List available checkpoints with filtering</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">get_handoff_notes</span>
+                        <span class="tool-desc">Get handoff summary for session continuity</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">configure_alerts</span>
+                        <span class="tool-desc">Enable/disable beeps and toast notifications</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">test_alert</span>
+                        <span class="tool-desc">Test alert system by triggering a specific level</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>MIT License | <a href="https://github.com/mcp-tool-shop/context-bar">GitHub</a> | <a href="/">MCP Tool Shop</a></p>
+        </div>
+    </footer>
+</body>
+</html>

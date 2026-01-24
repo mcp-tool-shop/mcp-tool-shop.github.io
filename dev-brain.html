@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Brain - AI-Powered Code Intelligence via MCP</title>
+    <meta name="description" content="Transform any AI assistant into a code analysis powerhouse. Test generation, security audits, coverage analysis, refactoring suggestions. MIT licensed.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e4e4e7;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        code, pre { font-family: 'JetBrains Mono', monospace; }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+        header { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1rem; font-weight: 600; color: #a1a1aa; text-decoration: none; }
+        .logo:hover { color: #fff; }
+        .github-link { display: flex; align-items: center; gap: 8px; color: #a1a1aa; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        .github-link:hover { color: #fff; }
+        .github-link svg { width: 20px; height: 20px; fill: currentColor; }
+
+        .hero { padding: 60px 0 40px; text-align: center; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 16px; color: #fff; }
+        .hero h1 span { background: linear-gradient(135deg, #a855f7 0%, #c084fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero .tagline { font-size: 1.25rem; color: #a1a1aa; max-width: 650px; margin: 0 auto 24px; }
+        .social-proof { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 24px; font-size: 0.9rem; color: #c084fc; margin-bottom: 32px; }
+
+        .install-section { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 24px; margin-bottom: 48px; }
+        .install-command { display: flex; align-items: center; justify-content: space-between; background: #1a1a2e; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px 20px; font-family: 'JetBrains Mono', monospace; font-size: 1rem; margin-bottom: 16px; }
+        .install-command code { color: #c084fc; }
+        .copy-btn { background: rgba(168, 85, 247, 0.2); border: 1px solid rgba(168, 85, 247, 0.4); color: #d8b4fe; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+        .copy-btn:hover { background: rgba(168, 85, 247, 0.3); }
+        .install-note { font-size: 0.85rem; color: #71717a; text-align: center; }
+
+        .capabilities { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 48px; }
+        .capability { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; }
+        .capability-icon { font-size: 1.5rem; margin-bottom: 12px; }
+        .capability h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; color: #fff; }
+        .capability p { font-size: 0.95rem; color: #a1a1aa; }
+
+        .security-table { margin-bottom: 48px; overflow-x: auto; }
+        .security-table h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 24px; text-align: center; color: #fff; }
+        .security-table table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.2); border-radius: 12px; overflow: hidden; }
+        .security-table th, .security-table td { padding: 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .security-table th { background: rgba(0,0,0,0.3); font-weight: 600; color: #fff; }
+        .security-table td { color: #a1a1aa; }
+        .severity-critical { color: #f87171; font-weight: 600; }
+        .severity-high { color: #fb923c; font-weight: 600; }
+        .severity-medium { color: #fbbf24; font-weight: 600; }
+        .security-table code { background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; }
+
+        .tools-section { margin-bottom: 48px; }
+        .tools-section h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 24px; text-align: center; color: #fff; }
+        .tools-grid { display: grid; gap: 12px; }
+        .tool { display: flex; align-items: center; gap: 16px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px 20px; }
+        .tool-name { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #c084fc; min-width: 180px; }
+        .tool-desc { color: #a1a1aa; font-size: 0.9rem; }
+
+        .code-example { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 24px; margin-bottom: 48px; overflow-x: auto; }
+        .code-example h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; color: #fff; }
+        .code-example pre { color: #e4e4e7; font-size: 0.9rem; line-height: 1.8; white-space: pre-wrap; }
+        .code-example .comment { color: #6b7280; }
+        .code-example .string { color: #4ade80; }
+        .code-example .keyword { color: #c084fc; }
+
+        footer { padding: 32px 0; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: #71717a; font-size: 0.85rem; }
+        footer a { color: #a1a1aa; text-decoration: none; }
+        footer a:hover { color: #fff; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">MCP Tool Shop</a>
+                <a href="https://github.com/mcp-tool-shop/dev-brain" class="github-link">
+                    <svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    View on GitHub
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Dev <span>Brain</span></h1>
+                <p class="tagline">Transform any AI assistant into a code analysis powerhouse. Test generation, security audits, coverage analysis, and refactoring suggestions.</p>
+                <div class="social-proof">90% test coverage | Works with Claude, Cursor, Windsurf</div>
+            </div>
+        </section>
+
+        <section class="install-section">
+            <div class="container">
+                <div class="install-command">
+                    <code>pip install dev-brain</code>
+                    <button class="copy-btn" onclick="navigator.clipboard.writeText('pip install dev-brain')">Copy</button>
+                </div>
+                <p class="install-note">Works with any MCP-compatible client</p>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="capabilities">
+                <div class="capability">
+                    <div class="capability-icon">🧪</div>
+                    <h3>Test Generation</h3>
+                    <p>Generate complete pytest files with fixtures, mocks, and edge cases. AST-based analysis produces code that actually compiles.</p>
+                </div>
+                <div class="capability">
+                    <div class="capability-icon">🔒</div>
+                    <h3>Security Audits</h3>
+                    <p>Detect SQL injection, command injection, hardcoded secrets, and 6+ vulnerability patterns with CWE mapping.</p>
+                </div>
+                <div class="capability">
+                    <div class="capability-icon">📊</div>
+                    <h3>Coverage Analysis</h3>
+                    <p>Find untested code paths, missing edge cases, and coverage gaps. Know exactly what needs tests.</p>
+                </div>
+                <div class="capability">
+                    <div class="capability-icon">🔄</div>
+                    <h3>Refactoring Suggestions</h3>
+                    <p>Identify complexity hotspots, naming issues, and code duplication. Targeted improvements, not rewrites.</p>
+                </div>
+                <div class="capability">
+                    <div class="capability-icon">📝</div>
+                    <h3>Documentation Analysis</h3>
+                    <p>Find missing docstrings and generate documentation templates. Keep docs in sync with code.</p>
+                </div>
+                <div class="capability">
+                    <div class="capability-icon">🎨</div>
+                    <h3>UX Insights</h3>
+                    <p>Analyze user-facing code for dropoff points, error patterns, and friction areas.</p>
+                </div>
+            </div>
+
+            <div class="security-table">
+                <h2>Security Vulnerabilities Detected</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Severity</th>
+                            <th>Vulnerability</th>
+                            <th>CWE</th>
+                            <th>Example Pattern</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="severity-critical">Critical</td>
+                            <td>SQL Injection</td>
+                            <td>CWE-89</td>
+                            <td><code>f"SELECT * FROM users WHERE id = {user_id}"</code></td>
+                        </tr>
+                        <tr>
+                            <td class="severity-critical">Critical</td>
+                            <td>Command Injection</td>
+                            <td>CWE-78</td>
+                            <td><code>os.system(f"ping {host}")</code></td>
+                        </tr>
+                        <tr>
+                            <td class="severity-critical">Critical</td>
+                            <td>Unsafe Deserialization</td>
+                            <td>CWE-502</td>
+                            <td><code>pickle.loads(user_data)</code></td>
+                        </tr>
+                        <tr>
+                            <td class="severity-high">High</td>
+                            <td>Hardcoded Secrets</td>
+                            <td>CWE-798</td>
+                            <td><code>api_key = "sk-1234..."</code></td>
+                        </tr>
+                        <tr>
+                            <td class="severity-high">High</td>
+                            <td>Path Traversal</td>
+                            <td>CWE-22</td>
+                            <td><code>open(f"/data/{filename}")</code></td>
+                        </tr>
+                        <tr>
+                            <td class="severity-medium">Medium</td>
+                            <td>Insecure Cryptography</td>
+                            <td>CWE-327</td>
+                            <td><code>hashlib.md5(password)</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <section class="tools-section">
+                <h2>MCP Tools</h2>
+                <div class="tools-grid">
+                    <div class="tool">
+                        <span class="tool-name">smart_tests_generate</span>
+                        <span class="tool-desc">AST-based pytest generation with fixtures and mocks</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">security_audit</span>
+                        <span class="tool-desc">OWASP-style vulnerability scanning with CWE mapping</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">coverage_analyze</span>
+                        <span class="tool-desc">Compare code patterns against test coverage</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">refactor_suggest</span>
+                        <span class="tool-desc">Analyze complexity, duplication, and naming issues</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">behavior_missing</span>
+                        <span class="tool-desc">Find user behaviors and edge cases not handled</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">ux_insights</span>
+                        <span class="tool-desc">Extract dropoff points, error states, friction areas</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">docs_generate</span>
+                        <span class="tool-desc">Generate documentation templates for undocumented code</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">brain_stats</span>
+                        <span class="tool-desc">Server statistics, configuration, and health status</span>
+                    </div>
+                </div>
+            </section>
+
+            <div class="code-example">
+                <h3>Natural Language Usage</h3>
+                <pre><span class="comment"># Just ask your AI assistant:</span>
+
+<span class="string">"Check my payment processing module for security issues"</span>
+
+<span class="comment"># Response:</span>
+Found 2 vulnerabilities:
+<span class="keyword">Critical:</span> SQL injection in process_payment() at line 45
+<span class="keyword">High:</span> Hardcoded API key detected at line 12
+
+Recommendations:
+1. Use parameterized queries instead of f-strings
+2. Move API key to environment variables</pre>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>MIT License | <a href="https://github.com/mcp-tool-shop/dev-brain">GitHub</a> | <a href="/">MCP Tool Shop</a></p>
+        </div>
+    </footer>
+</body>
+</html>

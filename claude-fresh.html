@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude-Fresh - Automatic Context Checkpoints for Claude Code</title>
+    <meta name="description" content="Automatic markdown checkpoints for Claude Code. No forced resets. Searchable handoffs indexed in SQLite with group summaries. MIT licensed.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e4e4e7;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        code, pre { font-family: 'JetBrains Mono', monospace; }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+        header { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1rem; font-weight: 600; color: #a1a1aa; text-decoration: none; }
+        .logo:hover { color: #fff; }
+        .github-link { display: flex; align-items: center; gap: 8px; color: #a1a1aa; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        .github-link:hover { color: #fff; }
+        .github-link svg { width: 20px; height: 20px; fill: currentColor; }
+
+        .hero { padding: 60px 0 40px; text-align: center; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 16px; color: #fff; }
+        .hero h1 span { background: linear-gradient(135deg, #22c55e 0%, #4ade80 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero .tagline { font-size: 1.25rem; color: #a1a1aa; max-width: 600px; margin: 0 auto 24px; }
+        .social-proof { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 24px; font-size: 0.9rem; color: #4ade80; margin-bottom: 32px; }
+
+        .install-section { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 24px; margin-bottom: 48px; }
+        .install-command { display: flex; align-items: center; justify-content: space-between; background: #1a1a2e; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px 20px; font-family: 'JetBrains Mono', monospace; font-size: 1rem; margin-bottom: 16px; }
+        .install-command code { color: #4ade80; }
+        .copy-btn { background: rgba(34, 197, 94, 0.2); border: 1px solid rgba(34, 197, 94, 0.4); color: #86efac; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+        .copy-btn:hover { background: rgba(34, 197, 94, 0.3); }
+        .install-note { font-size: 0.85rem; color: #71717a; text-align: center; }
+
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-bottom: 48px; }
+        .feature { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; }
+        .feature h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; color: #fff; }
+        .feature p { font-size: 0.95rem; color: #a1a1aa; }
+
+        .code-example { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 24px; margin-bottom: 48px; overflow-x: auto; }
+        .code-example h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; color: #fff; }
+        .code-example pre { color: #e4e4e7; font-size: 0.9rem; line-height: 1.8; white-space: pre-wrap; }
+        .code-example .comment { color: #6b7280; }
+        .code-example .string { color: #4ade80; }
+        .code-example .keyword { color: #c084fc; }
+
+        .tools-section { margin-bottom: 48px; }
+        .tools-section h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 24px; text-align: center; color: #fff; }
+        .tools-grid { display: grid; gap: 12px; }
+        .tool { display: flex; align-items: center; gap: 16px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px 20px; }
+        .tool-name { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #4ade80; min-width: 140px; }
+        .tool-desc { color: #a1a1aa; font-size: 0.9rem; }
+
+        footer { padding: 32px 0; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: #71717a; font-size: 0.85rem; }
+        footer a { color: #a1a1aa; text-decoration: none; }
+        footer a:hover { color: #fff; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">MCP Tool Shop</a>
+                <a href="https://github.com/mcp-tool-shop/claude-fresh" class="github-link">
+                    <svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    View on GitHub
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Claude-<span>Fresh</span></h1>
+                <p class="tagline">Automatic context checkpoints for Claude Code. No forced resets. You decide when to /compact.</p>
+                <div class="social-proof">Research-backed: Lost in the Middle (Stanford 2023), Context Rot (Chroma 2025)</div>
+            </div>
+        </section>
+
+        <section class="install-section">
+            <div class="container">
+                <div class="install-command">
+                    <code>pip install claude-fresh</code>
+                    <button class="copy-btn" onclick="navigator.clipboard.writeText('pip install claude-fresh')">Copy</button>
+                </div>
+                <p class="install-note">Requires Python 3.11+ and Claude Code</p>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="features">
+                <div class="feature">
+                    <h3>Automatic Handoffs</h3>
+                    <p>At 75% context, Claude writes a comprehensive markdown handoff. No intervention required.</p>
+                </div>
+                <div class="feature">
+                    <h3>Searchable Index</h3>
+                    <p>SQLite-backed full-text search by keyword, file, or decision. Find any past context instantly.</p>
+                </div>
+                <div class="feature">
+                    <h3>Group Summaries</h3>
+                    <p>Every 10 handoffs, Claude-Fresh creates a group summary. Search at two levels: details or patterns.</p>
+                </div>
+                <div class="feature">
+                    <h3>Verbatim Messages</h3>
+                    <p>Last 5 messages preserved exactly. No lossy summarization at the critical handoff point.</p>
+                </div>
+                <div class="feature">
+                    <h3>Human-Readable</h3>
+                    <p>Markdown files you can browse in any editor. Version-controllable. Grep-able.</p>
+                </div>
+                <div class="feature">
+                    <h3>User Controls Reset</h3>
+                    <p>Checkpoint saved, but you decide when to /compact. Critical moment? Stay in Phase 2.</p>
+                </div>
+            </div>
+
+            <section class="tools-section">
+                <h2>MCP Tools</h2>
+                <div class="tools-grid">
+                    <div class="tool">
+                        <span class="tool-name">fresh_status</span>
+                        <span class="tool-desc">Current context % and handoff count</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">fresh_save</span>
+                        <span class="tool-desc">Create a handoff (Claude writes the content)</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">fresh_search</span>
+                        <span class="tool-desc">Search handoffs by keyword, file, or decision</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">fresh_load</span>
+                        <span class="tool-desc">Load a specific handoff into context</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">fresh_latest</span>
+                        <span class="tool-desc">Load the most recent handoff</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">fresh_groups</span>
+                        <span class="tool-desc">List group summaries</span>
+                    </div>
+                </div>
+            </section>
+
+            <div class="code-example">
+                <h3>Handoff Structure</h3>
+                <pre><span class="comment"># Session Handoff: 2026-01-22 14:30</span>
+
+<span class="keyword">## Working On</span>
+<span class="string">Implementing JWT authentication for the API</span>
+
+<span class="keyword">## Decisions Made</span>
+- Using RS256 algorithm (user preference for asymmetric keys)
+- Storing refresh tokens in httpOnly cookies
+- Access tokens expire in 15 minutes
+
+<span class="keyword">## Files Modified</span>
+- <span class="string">src/auth/jwt.ts:42</span> - Added token generation
+- <span class="string">src/middleware/auth.ts:15</span> - Added verification middleware
+
+<span class="keyword">## Next Steps</span>
+1. Finish refresh token rotation logic
+2. Add rate limiting to auth endpoints
+3. Write integration tests</pre>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>MIT License | <a href="https://github.com/mcp-tool-shop/claude-fresh">GitHub</a> | <a href="/">MCP Tool Shop</a></p>
+        </div>
+    </footer>
+</body>
+</html>

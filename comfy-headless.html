@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comfy Headless - AI Image & Video Generation in 3 Lines</title>
+    <meta name="description" content="Making ComfyUI's power accessible without the complexity. AI image and video generation with presets, prompt enhancement, and clean Python API. MIT licensed.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e4e4e7;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        code, pre { font-family: 'JetBrains Mono', monospace; }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+        header { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1rem; font-weight: 600; color: #a1a1aa; text-decoration: none; }
+        .logo:hover { color: #fff; }
+        .github-link { display: flex; align-items: center; gap: 8px; color: #a1a1aa; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        .github-link:hover { color: #fff; }
+        .github-link svg { width: 20px; height: 20px; fill: currentColor; }
+
+        .hero { padding: 60px 0 40px; text-align: center; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 16px; color: #fff; }
+        .hero h1 span { background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero .tagline { font-size: 1.25rem; color: #a1a1aa; max-width: 600px; margin: 0 auto 24px; }
+        .social-proof { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(236, 72, 153, 0.1); border: 1px solid rgba(236, 72, 153, 0.3); border-radius: 24px; font-size: 0.9rem; color: #f472b6; margin-bottom: 32px; }
+
+        .install-section { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 24px; margin-bottom: 48px; }
+        .install-command { display: flex; align-items: center; justify-content: space-between; background: #1a1a2e; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px 20px; font-family: 'JetBrains Mono', monospace; font-size: 1rem; margin-bottom: 16px; }
+        .install-command code { color: #f472b6; }
+        .copy-btn { background: rgba(236, 72, 153, 0.2); border: 1px solid rgba(236, 72, 153, 0.4); color: #f9a8d4; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+        .copy-btn:hover { background: rgba(236, 72, 153, 0.3); }
+        .install-note { font-size: 0.85rem; color: #71717a; text-align: center; }
+
+        .code-example { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 24px; margin-bottom: 48px; overflow-x: auto; }
+        .code-example h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; color: #fff; }
+        .code-example pre { color: #e4e4e7; font-size: 0.9rem; line-height: 1.8; white-space: pre-wrap; }
+        .code-example .comment { color: #6b7280; }
+        .code-example .string { color: #4ade80; }
+        .code-example .keyword { color: #f472b6; }
+
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-bottom: 48px; }
+        .feature { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; }
+        .feature h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; color: #fff; }
+        .feature p { font-size: 0.95rem; color: #a1a1aa; }
+
+        .video-models { margin-bottom: 48px; overflow-x: auto; }
+        .video-models h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 24px; text-align: center; color: #fff; }
+        .video-models table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.2); border-radius: 12px; overflow: hidden; }
+        .video-models th, .video-models td { padding: 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .video-models th { background: rgba(0,0,0,0.3); font-weight: 600; color: #fff; }
+        .video-models td { color: #a1a1aa; }
+        .video-models .highlight { color: #4ade80; font-weight: 500; }
+
+        .extras { margin-bottom: 48px; }
+        .extras h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 24px; text-align: center; color: #fff; }
+        .extras-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+        .extra { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; }
+        .extra code { color: #f472b6; font-size: 0.9rem; }
+        .extra p { color: #a1a1aa; font-size: 0.85rem; margin-top: 8px; }
+
+        footer { padding: 32px 0; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: #71717a; font-size: 0.85rem; }
+        footer a { color: #a1a1aa; text-decoration: none; }
+        footer a:hover { color: #fff; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">MCP Tool Shop</a>
+                <a href="https://github.com/mcp-tool-shop/comfy-headless" class="github-link">
+                    <svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    View on GitHub
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Comfy <span>Headless</span></h1>
+                <p class="tagline">Making ComfyUI's power accessible without the complexity. AI image & video generation in 3 lines of code.</p>
+                <div class="social-proof">v2.5.1 | LTX-Video 2, Hunyuan 1.5, Wan 2.1/2.2 support</div>
+            </div>
+        </section>
+
+        <section class="install-section">
+            <div class="container">
+                <div class="install-command">
+                    <code>pip install comfy-headless[standard]</code>
+                    <button class="copy-btn" onclick="navigator.clipboard.writeText('pip install comfy-headless[standard]')">Copy</button>
+                </div>
+                <p class="install-note">Requires ComfyUI running locally (default: localhost:8188)</p>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="code-example">
+                <h3>Quick Start</h3>
+                <pre><span class="keyword">from</span> comfy_headless <span class="keyword">import</span> ComfyClient
+
+client = ComfyClient()
+result = client.generate_image(<span class="string">"a beautiful sunset over mountains"</span>)
+<span class="keyword">print</span>(f<span class="string">"Generated: {result['images']}"</span>)
+
+<span class="comment"># With AI prompt enhancement</span>
+<span class="keyword">from</span> comfy_headless <span class="keyword">import</span> enhance_prompt
+enhanced = enhance_prompt(<span class="string">"a cat"</span>, style=<span class="string">"detailed"</span>)
+<span class="comment"># "a cat, masterpiece, best quality, highly detailed..."</span>
+
+<span class="comment"># Video generation</span>
+result = client.generate_video(
+    prompt=<span class="string">"a cat walking through a garden"</span>,
+    preset=<span class="string">"ltx_quality"</span>  <span class="comment"># LTX-Video 2, 1280x720, 49 frames</span>
+)</pre>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <h3>Simple Presets</h3>
+                    <p>No node wiring needed. Choose a preset and generate. Best settings for your intent, automatically.</p>
+                </div>
+                <div class="feature">
+                    <h3>AI Prompt Enhancement</h3>
+                    <p>Ollama-powered prompt analysis and enhancement. Detects intent, suggests styles, adds quality tags.</p>
+                </div>
+                <div class="feature">
+                    <h3>Video Generation</h3>
+                    <p>LTX-Video 2, Hunyuan 1.5, Wan, AnimateDiff, SVD. One-line video with model presets.</p>
+                </div>
+                <div class="feature">
+                    <h3>Web UI Included</h3>
+                    <p>Gradio 6.0 interface with queue management, workflow browser, and model viewer.</p>
+                </div>
+                <div class="feature">
+                    <h3>WebSocket Progress</h3>
+                    <p>Real-time generation progress with callbacks. Know exactly what's happening.</p>
+                </div>
+                <div class="feature">
+                    <h3>Modular Install</h3>
+                    <p>Install only what you need: core, ai, websocket, health, ui, validation, observability.</p>
+                </div>
+            </div>
+
+            <div class="video-models">
+                <h2>Supported Video Models</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>VRAM</th>
+                            <th>Quality</th>
+                            <th>Speed</th>
+                            <th>Best For</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight">LTX-Video 2</td>
+                            <td>12GB+</td>
+                            <td>Excellent</td>
+                            <td>Fast</td>
+                            <td>General use, RTX 3080+</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Hunyuan 1.5</td>
+                            <td>14GB+</td>
+                            <td>Best</td>
+                            <td>Slow</td>
+                            <td>High quality, RTX 4080+</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Wan 2.1/2.2</td>
+                            <td>6-16GB</td>
+                            <td>Great</td>
+                            <td>Medium</td>
+                            <td>Budget GPUs, efficiency</td>
+                        </tr>
+                        <tr>
+                            <td>Mochi</td>
+                            <td>12GB+</td>
+                            <td>Excellent</td>
+                            <td>Slow</td>
+                            <td>Text adherence</td>
+                        </tr>
+                        <tr>
+                            <td>AnimateDiff</td>
+                            <td>6GB+</td>
+                            <td>Good</td>
+                            <td>Fast</td>
+                            <td>Quick previews</td>
+                        </tr>
+                        <tr>
+                            <td>SVD</td>
+                            <td>8GB+</td>
+                            <td>Good</td>
+                            <td>Medium</td>
+                            <td>Image-to-video</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="extras">
+                <h2>Modular Installation</h2>
+                <div class="extras-grid">
+                    <div class="extra">
+                        <code>pip install comfy-headless</code>
+                        <p>Core only (~2MB)</p>
+                    </div>
+                    <div class="extra">
+                        <code>comfy-headless[ai]</code>
+                        <p>Ollama prompt enhancement</p>
+                    </div>
+                    <div class="extra">
+                        <code>comfy-headless[websocket]</code>
+                        <p>Real-time progress</p>
+                    </div>
+                    <div class="extra">
+                        <code>comfy-headless[standard]</code>
+                        <p>Recommended bundle</p>
+                    </div>
+                    <div class="extra">
+                        <code>comfy-headless[ui]</code>
+                        <p>Gradio web interface</p>
+                    </div>
+                    <div class="extra">
+                        <code>comfy-headless[full]</code>
+                        <p>Everything included</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>MIT License | <a href="https://github.com/mcp-tool-shop/comfy-headless">GitHub</a> | <a href="/">MCP Tool Shop</a></p>
+        </div>
+    </footer>
+</body>
+</html>

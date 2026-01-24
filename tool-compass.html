@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool Compass - Semantic MCP Tool Discovery</title>
+    <meta name="description" content="Find the right MCP tool by intent, not memory. 95% fewer tokens. Semantic search across all your MCP servers. MIT licensed.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e4e4e7;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        code, pre { font-family: 'JetBrains Mono', monospace; }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+        header { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1rem; font-weight: 600; color: #a1a1aa; text-decoration: none; }
+        .logo:hover { color: #fff; }
+        .github-link { display: flex; align-items: center; gap: 8px; color: #a1a1aa; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        .github-link:hover { color: #fff; }
+        .github-link svg { width: 20px; height: 20px; fill: currentColor; }
+
+        .hero { padding: 60px 0 40px; text-align: center; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 16px; color: #fff; }
+        .hero h1 span { background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero .tagline { font-size: 1.25rem; color: #a1a1aa; max-width: 600px; margin: 0 auto 24px; }
+        .social-proof { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 24px; font-size: 0.9rem; color: #60a5fa; margin-bottom: 32px; }
+
+        .stats-bar { display: flex; justify-content: center; gap: 48px; margin-bottom: 48px; flex-wrap: wrap; }
+        .stat { text-align: center; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: #3b82f6; }
+        .stat-label { font-size: 0.85rem; color: #71717a; }
+
+        .install-section { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 24px; margin-bottom: 48px; }
+        .install-command { display: flex; align-items: center; justify-content: space-between; background: #1a1a2e; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px 20px; font-family: 'JetBrains Mono', monospace; font-size: 1rem; margin-bottom: 16px; }
+        .install-command code { color: #60a5fa; }
+        .copy-btn { background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #93c5fd; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+        .copy-btn:hover { background: rgba(59, 130, 246, 0.3); }
+        .install-note { font-size: 0.85rem; color: #71717a; text-align: center; }
+
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-bottom: 48px; }
+        .feature { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; }
+        .feature h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; color: #fff; }
+        .feature p { font-size: 0.95rem; color: #a1a1aa; }
+
+        .code-example { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 24px; margin-bottom: 48px; overflow-x: auto; }
+        .code-example h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; color: #fff; }
+        .code-example pre { color: #e4e4e7; font-size: 0.9rem; line-height: 1.8; white-space: pre-wrap; }
+        .code-example .comment { color: #6b7280; }
+        .code-example .string { color: #4ade80; }
+        .code-example .keyword { color: #60a5fa; }
+        .code-example .number { color: #f472b6; }
+
+        .tools-section { margin-bottom: 48px; }
+        .tools-section h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 24px; text-align: center; color: #fff; }
+        .tools-grid { display: grid; gap: 12px; }
+        .tool { display: flex; align-items: center; gap: 16px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px 20px; }
+        .tool-name { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #60a5fa; min-width: 180px; }
+        .tool-desc { color: #a1a1aa; font-size: 0.9rem; }
+
+        footer { padding: 32px 0; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: #71717a; font-size: 0.85rem; }
+        footer a { color: #a1a1aa; text-decoration: none; }
+        footer a:hover { color: #fff; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">MCP Tool Shop</a>
+                <a href="https://github.com/mcp-tool-shop/tool-compass" class="github-link">
+                    <svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    View on GitHub
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Tool <span>Compass</span></h1>
+                <p class="tagline">Find the right MCP tool by intent, not memory. Semantic search across all your servers.</p>
+                <div class="social-proof">HNSW vector indexing with nomic-embed-text embeddings</div>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-value">95%</div>
+                    <div class="stat-label">Token Savings</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">&lt;15ms</div>
+                    <div class="stat-label">Query Latency</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">~95%</div>
+                    <div class="stat-label">Accuracy@3</div>
+                </div>
+            </div>
+        </div>
+
+        <section class="install-section">
+            <div class="container">
+                <div class="install-command">
+                    <code>pip install tool-compass</code>
+                    <button class="copy-btn" onclick="navigator.clipboard.writeText('pip install tool-compass')">Copy</button>
+                </div>
+                <p class="install-note">Requires Ollama with nomic-embed-text model</p>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="features">
+                <div class="feature">
+                    <h3>Semantic Search</h3>
+                    <p>Find tools by describing what you want to do. "generate an image" finds comfy:comfy_generate.</p>
+                </div>
+                <div class="feature">
+                    <h3>Progressive Disclosure</h3>
+                    <p>compass() returns summaries, describe() loads full schemas, execute() runs tools. Only load what you need.</p>
+                </div>
+                <div class="feature">
+                    <h3>Hot Cache</h3>
+                    <p>Frequently used tools are pre-loaded. Common workflows get faster over time.</p>
+                </div>
+                <div class="feature">
+                    <h3>Chain Detection</h3>
+                    <p>Automatically discovers common tool workflows from usage patterns.</p>
+                </div>
+                <div class="feature">
+                    <h3>Usage Analytics</h3>
+                    <p>Track usage patterns, success rates, and tool performance across sessions.</p>
+                </div>
+                <div class="feature">
+                    <h3>Docker Ready</h3>
+                    <p>One-command deployment with docker-compose. Includes optional Ollama in the stack.</p>
+                </div>
+            </div>
+
+            <div class="code-example">
+                <h3>How It Works</h3>
+                <pre><span class="comment"># Before: 77 tools x 500 tokens = 38,500 tokens per request</span>
+<span class="comment"># After: 1 compass tool + 3 results = 2,000 tokens per request</span>
+
+<span class="comment"># Step 1: Find tools by intent</span>
+compass(<span class="string">"generate an AI image from text"</span>)
+<span class="comment"># Returns: comfy:comfy_generate (0.912 confidence)</span>
+
+<span class="comment"># Step 2: Get full schema</span>
+describe(<span class="string">"comfy:comfy_generate"</span>)
+<span class="comment"># Returns: Complete parameter schema</span>
+
+<span class="comment"># Step 3: Execute</span>
+execute(<span class="string">"comfy:comfy_generate"</span>, {
+    <span class="string">"prompt"</span>: <span class="string">"a beautiful sunset"</span>
+})</pre>
+            </div>
+
+            <section class="tools-section">
+                <h2>MCP Tools</h2>
+                <div class="tools-grid">
+                    <div class="tool">
+                        <span class="tool-name">compass(intent)</span>
+                        <span class="tool-desc">Semantic search for tools matching your intent</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">describe(tool_name)</span>
+                        <span class="tool-desc">Get full schema for a specific tool</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">execute(tool, args)</span>
+                        <span class="tool-desc">Run a tool on its backend server</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">compass_categories()</span>
+                        <span class="tool-desc">List available categories and servers</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">compass_status()</span>
+                        <span class="tool-desc">System health and configuration</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">compass_analytics()</span>
+                        <span class="tool-desc">Usage statistics and performance metrics</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">compass_chains()</span>
+                        <span class="tool-desc">Manage tool workflows and sequences</span>
+                    </div>
+                    <div class="tool">
+                        <span class="tool-name">compass_sync()</span>
+                        <span class="tool-desc">Rebuild index from backend servers</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>MIT License | <a href="https://github.com/mcp-tool-shop/tool-compass">GitHub</a> | <a href="/">MCP Tool Shop</a></p>
+        </div>
+    </footer>
+</body>
+</html>
