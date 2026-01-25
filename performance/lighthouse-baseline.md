@@ -1,0 +1,1 @@
+Target: Lighthouse ≥95

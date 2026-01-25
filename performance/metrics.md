@@ -1,0 +1,1 @@
+Track LCP, CLS, TBT, JS size
