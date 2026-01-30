@@ -1,0 +1,28 @@
+{
+  "schema_version": "toolbundle.manifest.v0.1",
+  "cid_profile": {
+    "name": "mcp.cidprofile.default",
+    "version": "1",
+    "hash": "sha2-256",
+    "codec": "dag-cbor",
+    "base": "base32",
+    "normalization": {
+      "path_separator": "/",
+      "sort_entries": true,
+      "strip_timestamps": true,
+      "strip_owner": true,
+      "strip_permissions": true,
+      "reject_symlinks": true
+    }
+  },
+  "entries": [
+    {
+      "path": "dist/tool.js",
+      "blob_cid": "bafkreigaknpexyvxt76zgkitavbwx6ejgfheup5oybpm77f3pxzrvwpfdi",
+      "size_bytes": 512,
+      "executable": false
+    }
+  ],
+  "descriptor_cid": "bafyreianp5v6r33d7t63gflcraml6kxcvy5x7rtoa5lmhyjvkgzxiizwjq",
+  "root_cid": "bafyreifyfdhtyxiqponnoyme3bketuyv4uyh57tqghccl2kdhj2fsfh6oa"
+}

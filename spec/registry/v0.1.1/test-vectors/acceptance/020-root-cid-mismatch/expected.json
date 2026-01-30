@@ -1,0 +1,12 @@
+{
+  "result": "REJECT",
+  "error": {
+    "code": "ROOT_CID_MISMATCH",
+    "what": "Pointer root_cid does not match descriptor.artifact.root_cid",
+    "why": {
+      "pointer_root_cid": "bafybeihcyruaeza7uyjd6ugicbcrqumejf6lni7o7q6c7qbw5dj7cdm4ya",
+      "descriptor_root_cid": "bafyreifyfdhtyxiqponnoyme3bketuyv4uyh57tqghccl2kdhj2fsfh6oa"
+    },
+    "fix": "Verify pointer is pointing to the correct artifact."
+  }
+}

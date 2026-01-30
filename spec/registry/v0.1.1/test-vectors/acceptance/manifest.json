@@ -1,0 +1,62 @@
+{
+  "schema_version": "test-vector.manifest.v0.1",
+  "category": "acceptance",
+  "vectors": [
+    {
+      "id": "017-happy-path",
+      "description": "Valid pointer + descriptor + manifest + unexpired integrity attestation => ACCEPT",
+      "mode": "evaluate-acceptance",
+      "input": "017-happy-path/",
+      "expected": "017-happy-path/expected.json"
+    },
+    {
+      "id": "018-expired-attestation",
+      "description": "Integrity claim expires_at_utc in the past => REJECT ATTESTATION_EXPIRED",
+      "mode": "evaluate-acceptance",
+      "input": "018-expired-attestation/",
+      "expected": "018-expired-attestation/expected.json"
+    },
+    {
+      "id": "019-missing-attestation",
+      "description": "No attestations found => REJECT NO_VALID_ATTESTATIONS",
+      "mode": "evaluate-acceptance",
+      "input": "019-missing-attestation/",
+      "expected": "019-missing-attestation/expected.json"
+    },
+    {
+      "id": "020-root-cid-mismatch",
+      "description": "Pointer root_cid does not equal descriptor.artifact.root_cid => REJECT ROOT_CID_MISMATCH",
+      "mode": "evaluate-acceptance",
+      "input": "020-root-cid-mismatch/",
+      "expected": "020-root-cid-mismatch/expected.json"
+    },
+    {
+      "id": "021-required-signer-missing",
+      "description": "Pointer requires signer key K but attestation issuer key is different => REJECT REQUIRED_SIGNER_MISSING",
+      "mode": "evaluate-acceptance",
+      "input": "021-required-signer-missing/",
+      "expected": "021-required-signer-missing/expected.json"
+    },
+    {
+      "id": "022-policy-block-network",
+      "description": "Descriptor requests network=allow but installer denies => REJECT POLICY_BLOCKED_NETWORK",
+      "mode": "evaluate-acceptance",
+      "input": "022-policy-block-network/",
+      "expected": "022-policy-block-network/expected.json"
+    },
+    {
+      "id": "023-verifier-required",
+      "description": "Pointer requires verifier attestation but only maintainer attestation present => REJECT VERIFIER_ATTESTATION_REQUIRED",
+      "mode": "evaluate-acceptance",
+      "input": "023-verifier-required/",
+      "expected": "023-verifier-required/expected.json"
+    },
+    {
+      "id": "024-legacy-channel-warning",
+      "description": "Channel legacy-main requires explicit allow-legacy; default run => REJECT LEGACY_NOT_ALLOWED",
+      "mode": "evaluate-acceptance",
+      "input": "024-legacy-channel-warning/",
+      "expected": "024-legacy-channel-warning/expected.json"
+    }
+  ]
+}

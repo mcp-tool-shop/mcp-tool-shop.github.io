@@ -1,0 +1,34 @@
+{
+  "schema_version": "test-vector.manifest.v0.1",
+  "category": "cid-computation",
+  "vectors": [
+    {
+      "id": "009-descriptor-cid",
+      "description": "Compute CID for tool.descriptor under mcp.cidprofile.default v1",
+      "mode": "compute-cid",
+      "input": "009-descriptor.input.json",
+      "expected": "009-descriptor.expected.json"
+    },
+    {
+      "id": "010-manifest-cid",
+      "description": "Compute CID for toolbundle.manifest under mcp.cidprofile.default v1",
+      "mode": "compute-cid",
+      "input": "010-manifest.input.json",
+      "expected": "010-manifest.expected.json"
+    },
+    {
+      "id": "011-attestation-cid",
+      "description": "Compute CID for attestation.envelope under mcp.cidprofile.default v1",
+      "mode": "compute-cid",
+      "input": "011-attestation.input.json",
+      "expected": "011-attestation.expected.json"
+    },
+    {
+      "id": "012-blob-cid-raw",
+      "description": "Compute CID for a raw blob (codec raw, sha2-256)",
+      "mode": "compute-cid",
+      "input": "012-blob.input.bin",
+      "expected": "012-blob.expected.json"
+    }
+  ]
+}

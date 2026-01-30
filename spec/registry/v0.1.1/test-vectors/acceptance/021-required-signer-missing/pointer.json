@@ -1,0 +1,48 @@
+{
+  "schema_version": "registry.pointer.v0.1",
+  "registry": {
+    "name": "mcp-tool-shop",
+    "generated_at_utc": "2026-01-30T21:00:00Z",
+    "issuer": "registry@tool-shop"
+  },
+  "pointers": [
+    {
+      "tool": "mcp.registry.fixture",
+      "channel": "stable",
+      "root_cid": "bafyreifyfdhtyxiqponnoyme3bketuyv4uyh57tqghccl2kdhj2fsfh6oa",
+      "descriptor_cid": "bafyreiccjc3fghpvbnh22aurk7uz7s2va25wyiiqtntvqk3cd3jz7dpmwi",
+      "cid_profile": {
+        "name": "mcp.cidprofile.default",
+        "version": "1",
+        "hash": "sha2-256",
+        "codec": "dag-cbor",
+        "base": "base32",
+        "normalization": {
+          "path_separator": "/",
+          "sort_entries": true,
+          "strip_timestamps": true,
+          "strip_owner": true,
+          "strip_permissions": true,
+          "reject_symlinks": true
+        }
+      },
+      "updated_at_utc": "2026-01-30T21:00:00Z",
+      "constraints": {
+        "require_signers": [
+          "did:key:z6MkDIFFERENTKEY123456789"
+        ]
+      }
+    }
+  ],
+  "signatures": [
+    {
+      "key_id": "did:key:z6Mkk2vTZNdMAsnefBSHTzZfmzF4Wq3B72NqrvBE5kuuPwDe",
+      "alg": "ed25519",
+      "sig": "WKUAEX0-eIzaA3_RLAUTpDKL1Iy629md1W5K3uBSyyTAEC5yDnD6IEENWu2ea91E97HlHTk8OmnjJPTCCUgkDw",
+      "signed_fields": [
+        "/pointers",
+        "/registry"
+      ]
+    }
+  ]
+}

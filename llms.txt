@@ -35,6 +35,13 @@ MCP Tool Shop builds production-grade MCP servers for the agentic future:
 ### Research
 - **ASPIRE-AI** — Teaching AI judgment through adversarial mentorship
 
+### Standards
+- **CID Registry Spec v0.1.1** — Content-addressed tool distribution specification
+  - Verifier-first, deterministic CID computation, cryptographic attestations
+  - Rulebook: /spec/registry/v0.1.1/docs/verifier-rulebook.v0.1.md
+  - Test Vectors: /spec/registry/v0.1.1/test-vectors/ (24 vectors, all passing)
+  - Schemas: /spec/registry/v0.1.1/schemas/
+
 ## Links
 
 - Organization: https://github.com/mcp-tool-shop

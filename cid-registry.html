@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CID Registry Spec v0.1.1 - Content-Addressed Tool Distribution</title>
+    <meta name="description" content="Verifier-first, content-addressed registry specification for MCP tools. Cryptographic verification, supply-chain security, deterministic CIDs.">
+    <meta name="keywords" content="CID, content-addressed, MCP registry, tool verification, supply chain security, IPLD, cryptographic verification">
+    <link rel="canonical" href="https://mcptoolshop.com/cid-registry.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://mcptoolshop.com/cid-registry.html">
+    <meta property="og:title" content="CID Registry Spec v0.1.1 - Verifier-First Tool Distribution">
+    <meta property="og:description" content="Content-addressed MCP tool registry with cryptographic verification and supply-chain security.">
+
+    <link rel="icon" type="image/png" href="/images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e4e4e7;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 40px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+        }
+
+        nav a {
+            color: #a1a1aa;
+            text-decoration: none;
+            margin-left: 32px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #fff;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 0 40px;
+        }
+
+        .hero h1 {
+            font-size: 2.75rem;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #10b981 0%, #60a5fa 50%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitle {
+            font-size: 1.25rem;
+            color: #a1a1aa;
+            margin-bottom: 24px;
+        }
+
+        .version-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            color: #10b981;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+        }
+
+        .guarantees {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 60px;
+        }
+
+        .guarantee {
+            text-align: center;
+            padding: 24px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+        }
+
+        .guarantee-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .guarantee h3 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .guarantee p {
+            font-size: 0.875rem;
+            color: #71717a;
+        }
+
+        section {
+            margin-bottom: 60px;
+        }
+
+        section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        section h2::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, #10b981, #60a5fa);
+            border-radius: 2px;
+        }
+
+        .flow-diagram {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 32px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .flow-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .flow-num {
+            width: 28px;
+            height: 28px;
+            background: rgba(96, 165, 250, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: #60a5fa;
+            flex-shrink: 0;
+        }
+
+        .flow-arrow {
+            color: #4b5563;
+            margin: 0 8px;
+        }
+
+        .flow-cid {
+            color: #10b981;
+        }
+
+        .artifacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .artifact-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 24px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s;
+        }
+
+        .artifact-card:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(96, 165, 250, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .artifact-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .artifact-card p {
+            font-size: 0.875rem;
+            color: #a1a1aa;
+            margin-bottom: 12px;
+        }
+
+        .artifact-card .file-list {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #71717a;
+        }
+
+        .quickstart {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 32px;
+        }
+
+        .quickstart h3 {
+            font-size: 1rem;
+            margin-bottom: 16px;
+            color: #a1a1aa;
+        }
+
+        .code-block {
+            background: #0d0d14;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+        }
+
+        .code-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .code-comment {
+            color: #6b7280;
+        }
+
+        .code-command {
+            color: #10b981;
+        }
+
+        .error-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        .error-table th,
+        .error-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .error-table th {
+            color: #a1a1aa;
+            font-weight: 500;
+            background: rgba(255,255,255,0.03);
+        }
+
+        .error-table td:first-child {
+            font-family: 'JetBrains Mono', monospace;
+            color: #f87171;
+        }
+
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            color: #71717a;
+        }
+
+        footer a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .guarantees {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <a href="/" class="logo">
+                <img src="/images/logo.png" alt="MCP Tool Shop">
+                MCP Tool Shop
+            </a>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/registry.html">Registry</a>
+                <a href="https://github.com/mcp-tool-shop">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>CID Registry Specification</h1>
+            <p class="subtitle">Verifier-first, content-addressed tool distribution</p>
+            <span class="version-badge">v0.1.1 - Stable</span>
+        </section>
+
+        <div class="guarantees">
+            <div class="guarantee">
+                <div class="guarantee-icon">🔐</div>
+                <h3>Content-Addressed</h3>
+                <p>Tools identified by CID, not URLs. Tamper-evident by design.</p>
+            </div>
+            <div class="guarantee">
+                <div class="guarantee-icon">✅</div>
+                <h3>Verifier-First</h3>
+                <p>Installation requires signed attestations from trusted parties.</p>
+            </div>
+            <div class="guarantee">
+                <div class="guarantee-icon">🔄</div>
+                <h3>Deterministic</h3>
+                <p>Same input = same CID. Independent implementations agree.</p>
+            </div>
+            <div class="guarantee">
+                <div class="guarantee-icon">📋</div>
+                <h3>Auditable</h3>
+                <p>Complete provenance from registry to installed artifact.</p>
+            </div>
+        </div>
+
+        <section>
+            <h2>How Resolution Works</h2>
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <span class="flow-num">1</span>
+                    <span>tool@channel</span>
+                    <span class="flow-arrow">→</span>
+                    <span>Registry Pointer (signed)</span>
+                </div>
+                <div class="flow-step">
+                    <span class="flow-num">2</span>
+                    <span>Pointer</span>
+                    <span class="flow-arrow">→</span>
+                    <span class="flow-cid">descriptor_cid</span> + <span class="flow-cid">root_cid</span>
+                </div>
+                <div class="flow-step">
+                    <span class="flow-num">3</span>
+                    <span class="flow-cid">descriptor_cid</span>
+                    <span class="flow-arrow">→</span>
+                    <span>tool.descriptor.json (metadata, policy)</span>
+                </div>
+                <div class="flow-step">
+                    <span class="flow-num">4</span>
+                    <span class="flow-cid">root_cid</span>
+                    <span class="flow-arrow">→</span>
+                    <span>toolbundle.manifest.json (file list)</span>
+                </div>
+                <div class="flow-step">
+                    <span class="flow-num">5</span>
+                    <span>Attestations</span>
+                    <span class="flow-arrow">→</span>
+                    <span>Verify signatures, check expiry, enforce constraints</span>
+                </div>
+                <div class="flow-step">
+                    <span class="flow-num">6</span>
+                    <span>Policy Gate</span>
+                    <span class="flow-arrow">→</span>
+                    <span>ACCEPT or REJECT with error code</span>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Download Artifacts</h2>
+            <div class="artifacts-grid">
+                <a href="/spec/registry/v0.1.1/docs/verifier-rulebook.v0.1.md" class="artifact-card">
+                    <h3>Verifier Rulebook</h3>
+                    <p>Normative specification with all verification rules</p>
+                    <div class="file-list">verifier-rulebook.v0.1.md</div>
+                </a>
+                <a href="/spec/registry/v0.1.1/docs/IMPLEMENTATION_NOTES.md" class="artifact-card">
+                    <h3>Implementation Notes</h3>
+                    <p>Step-by-step code examples for the 9-step pipeline</p>
+                    <div class="file-list">IMPLEMENTATION_NOTES.md</div>
+                </a>
+                <a href="/spec/registry/v0.1.1/schemas/" class="artifact-card">
+                    <h3>JSON Schemas</h3>
+                    <p>Schemas for descriptor, manifest, attestation, pointer</p>
+                    <div class="file-list">4 schema files</div>
+                </a>
+                <a href="/spec/registry/v0.1.1/test-vectors/" class="artifact-card">
+                    <h3>Test Vectors</h3>
+                    <p>24 conformance vectors across 4 categories</p>
+                    <div class="file-list">Frozen v0.1</div>
+                </a>
+            </div>
+        </section>
+
+        <section>
+            <h2>Quickstart</h2>
+            <div class="quickstart">
+                <h3>Run the reference verifier against test vectors</h3>
+                <div class="code-block">
+                    <span class="code-comment"># Clone and run tests</span><br>
+                    <span class="code-command">git clone</span> https://github.com/mcp-tool-shop/mcp-registry-spec.git<br>
+                    <span class="code-command">cd</span> mcp-registry-spec/verifier<br>
+                    <span class="code-command">npm install</span> && <span class="code-command">npm run build</span> && <span class="code-command">npm test</span>
+                </div>
+                <h3>Expected output</h3>
+                <div class="code-block">
+                    # tests 24<br>
+                    # pass 24<br>
+                    # fail 0
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Key Error Codes</h2>
+            <table class="error-table">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>MANIFEST_CID_MISMATCH</td>
+                        <td>Computed CID doesn't match manifest.root_cid</td>
+                    </tr>
+                    <tr>
+                        <td>DESCRIPTOR_CID_MISMATCH</td>
+                        <td>Computed descriptor CID doesn't match pointer</td>
+                    </tr>
+                    <tr>
+                        <td>NO_VALID_ATTESTATIONS</td>
+                        <td>No attestations found for this artifact</td>
+                    </tr>
+                    <tr>
+                        <td>ATTESTATION_EXPIRED</td>
+                        <td>Integrity claim past expiry date</td>
+                    </tr>
+                    <tr>
+                        <td>POLICY_BLOCKED_NETWORK</td>
+                        <td>Tool requires network access, installer denies</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="margin-top: 16px; color: #71717a; font-size: 0.875rem;">
+                See <a href="/spec/registry/v0.1.1/docs/verifier-rulebook.v0.1.md" style="color: #60a5fa;">Rulebook &sect;7</a> for the complete error code reference.
+            </p>
+        </section>
+
+        <section>
+            <h2>Technical Details</h2>
+            <div class="quickstart">
+                <h3>CID Profile: mcp.cidprofile.default.v1</h3>
+                <div class="code-block">
+                    Hash: sha2-256<br>
+                    Codec: dag-cbor<br>
+                    Base: base32<br>
+                    Result: bafyrei... (CID v1)
+                </div>
+                <h3>Manifest CID Preimage (Rulebook &sect;4.2.3)</h3>
+                <div class="code-block">
+                    <span class="code-comment"># Computed over content fields only, not linkage fields</span><br>
+                    manifest_preimage = { schema_version, cid_profile, entries }<br>
+                    root_cid = CID(manifest_preimage)<br>
+                    <span class="code-comment"># descriptor_cid and root_cid excluded from CID computation</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>
+                <a href="https://github.com/mcp-tool-shop/mcp-registry-spec">View on GitHub</a> &middot;
+                <a href="/spec/registry/v0.1.1/docs/verifier-rulebook.v0.1.md">Full Specification</a> &middot;
+                MIT License
+            </p>
+            <p style="margin-top: 12px;">
+                &copy; 2026 MCP Tool Shop
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

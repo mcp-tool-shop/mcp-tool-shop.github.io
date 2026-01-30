@@ -1,0 +1,6 @@
+{
+  "key_id": "did:key:z6MkezcXcwofjwGsCmDCEW3pfXeRihWda2JwD6uooPNSCvDs",
+  "alg": "ed25519",
+  "public_key": "CAgqY4w9LBLwabZVd_ngbv58PE2EmW06ssXQVb4XPkY",
+  "name": "test-verifier"
+}

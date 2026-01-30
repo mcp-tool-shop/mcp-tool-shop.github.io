@@ -1,0 +1,16 @@
+{
+  "result": "ACCEPT",
+  "provenance": {
+    "tool": "mcp.registry.fixture",
+    "channel": "stable",
+    "root_cid": "bafyreifyfdhtyxiqponnoyme3bketuyv4uyh57tqghccl2kdhj2fsfh6oa",
+    "descriptor_cid": "bafyreiccjc3fghpvbnh22aurk7uz7s2va25wyiiqtntvqk3cd3jz7dpmwi",
+    "attestations_used": [
+      "did:key:z6MkezcXcwofjwGsCmDCEW3pfXeRihWda2JwD6uooPNSCvDs"
+    ],
+    "constraints_enforced": {
+      "require_verifier_attestation": false,
+      "min_attestations": 1
+    }
+  }
+}

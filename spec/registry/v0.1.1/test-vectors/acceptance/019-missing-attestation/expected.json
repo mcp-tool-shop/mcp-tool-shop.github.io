@@ -1,0 +1,12 @@
+{
+  "result": "REJECT",
+  "error": {
+    "code": "NO_VALID_ATTESTATIONS",
+    "what": "No valid attestations found",
+    "why": {
+      "attestations_found": 0,
+      "attestations_required": 1
+    },
+    "fix": "Obtain at least one valid integrity attestation for this root_cid."
+  }
+}

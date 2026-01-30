@@ -1,0 +1,12 @@
+{
+  "result": "REJECT",
+  "error": {
+    "code": "VERIFIER_ATTESTATION_REQUIRED",
+    "what": "Pointer requires verifier attestation but only maintainer attestation present",
+    "why": {
+      "required": "verifier",
+      "found": "maintainer"
+    },
+    "fix": "Obtain attestation from an approved verifier."
+  }
+}

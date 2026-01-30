@@ -1,0 +1,12 @@
+{
+  "result": "REJECT",
+  "error": {
+    "code": "LEGACY_NOT_ALLOWED",
+    "what": "Channel legacy-main requires explicit allow-legacy override",
+    "why": {
+      "channel": "legacy-main",
+      "allow_legacy": false
+    },
+    "fix": "Use --allow-legacy flag to install from legacy channels, or use a non-legacy channel."
+  }
+}

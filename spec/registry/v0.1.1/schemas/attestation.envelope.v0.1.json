@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mcp-tool-shop.github.io/mcp-registry-spec/schemas/attestation.envelope.v0.1.json",
+  "title": "MCP Attestation Envelope v0.1",
+  "description": "Signed attestation containing integrity claims about a tool artifact.",
+  "type": "object",
+  "required": ["schema_version", "subject", "claims", "signatures"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "attestation.envelope.v0.1",
+      "description": "Schema version identifier"
+    },
+    "subject": {
+      "type": "object",
+      "description": "The artifact this attestation covers",
+      "required": ["root_cid", "descriptor_cid", "cid_profile"],
+      "properties": {
+        "root_cid": {
+          "type": "string",
+          "description": "CID of the manifest being attested",
+          "pattern": "^bafyrei[a-z2-7]+$"
+        },
+        "descriptor_cid": {
+          "type": "string",
+          "description": "CID of the descriptor being attested",
+          "pattern": "^bafyrei[a-z2-7]+$"
+        },
+        "cid_profile": {
+          "type": "object",
+          "description": "CID profile used",
+          "required": ["name", "version", "hash", "codec", "base"],
+          "properties": {
+            "name": { "type": "string" },
+            "version": { "type": "string" },
+            "hash": { "type": "string" },
+            "codec": { "type": "string" },
+            "base": { "type": "string" }
+          }
+        }
+      }
+    },
+    "claims": {
+      "type": "array",
+      "description": "List of claims about the subject",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["type", "issued_at_utc", "issuer", "payload"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Claim type identifier",
+            "enum": ["mcp.claim.integrity", "mcp.claim.audit", "mcp.claim.compatibility"]
+          },
+          "issued_at_utc": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the claim was issued (ISO 8601 UTC)"
+          },
+          "expires_at_utc": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the claim expires (ISO 8601 UTC)"
+          },
+          "issuer": {
+            "type": "object",
+            "required": ["key_id", "role"],
+            "properties": {
+              "key_id": {
+                "type": "string",
+                "description": "did:key identifier of the issuer",
+                "pattern": "^did:key:z[a-zA-Z0-9]+$"
+              },
+              "role": {
+                "type": "string",
+                "enum": ["verifier", "maintainer", "auditor"],
+                "description": "Role of the issuer"
+              }
+            }
+          },
+          "payload": {
+            "type": "object",
+            "description": "Claim-specific data",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "description": "Payload kind identifier"
+              },
+              "verified_root_cid": {
+                "type": "string",
+                "description": "The root_cid that was verified"
+              },
+              "verified_descriptor_cid": {
+                "type": "string",
+                "description": "The descriptor_cid that was verified"
+              }
+            }
+          }
+        }
+      }
+    },
+    "signatures": {
+      "type": "array",
+      "description": "Signatures over the attestation",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["key_id", "alg", "sig", "signed_fields"],
+        "properties": {
+          "key_id": {
+            "type": "string",
+            "description": "did:key identifier of the signer",
+            "pattern": "^did:key:z[a-zA-Z0-9]+$"
+          },
+          "alg": {
+            "type": "string",
+            "const": "ed25519",
+            "description": "Signature algorithm"
+          },
+          "sig": {
+            "type": "string",
+            "description": "Base64url-encoded signature"
+          },
+          "signed_fields": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "JSON Pointers to fields included in signing preimage"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

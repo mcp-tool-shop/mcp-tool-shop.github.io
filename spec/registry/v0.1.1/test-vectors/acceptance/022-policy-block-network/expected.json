@@ -1,0 +1,12 @@
+{
+  "result": "REJECT",
+  "error": {
+    "code": "POLICY_BLOCKED_NETWORK",
+    "what": "Tool requests network access but installer policy denies it",
+    "why": {
+      "tool_policy_network": "allow",
+      "installer_policy_network": "deny"
+    },
+    "fix": "Use a tool that does not require network access, or adjust installer policy."
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": "tool.descriptor.v0.1",
+  "tool": {
+    "name": "mcp.registry.fixture",
+    "display_name": "MCP Registry Fixture Tool",
+    "version": "0.1.0",
+    "description": "Test fixture tool for CID computation vectors",
+    "license": "MIT"
+  },
+  "artifact": {
+    "root_cid": "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+    "cid_profile": {
+      "name": "mcp.cidprofile.default",
+      "version": "1",
+      "hash": "sha2-256",
+      "codec": "dag-cbor",
+      "base": "base32",
+      "normalization": {
+        "path_separator": "/",
+        "sort_entries": true,
+        "strip_timestamps": true,
+        "strip_owner": true,
+        "strip_permissions": true,
+        "reject_symlinks": true
+      }
+    },
+    "media_type": "application/vnd.mcp.toolbundle+car",
+    "size_bytes": 1024
+  },
+  "entrypoint": {
+    "runtime": "node",
+    "target": "dist/tool.js:handle"
+  },
+  "schemas": {
+    "request": [
+      {
+        "name": "test.request.v0.1",
+        "cid": "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi"
+      }
+    ],
+    "response": [
+      {
+        "name": "test.response.v0.1",
+        "cid": "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi"
+      }
+    ]
+  },
+  "security": {
+    "policy": {
+      "network": "deny",
+      "filesystem": "read_only",
+      "exec": "deny"
+    }
+  }
+}

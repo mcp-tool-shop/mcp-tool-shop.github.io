@@ -1,0 +1,60 @@
+{
+  "schema_version": "test-vector.manifest.v0.1",
+  "category": "signing-preimage",
+  "vectors": [
+    {
+      "id": "013-pointer-preimage",
+      "description": "Signing preimage for registry.pointer using signed_fields order and 0x00 separators",
+      "mode": "build-preimage",
+      "input": "013-pointer.input.json",
+      "signed_fields": [
+        "/pointers",
+        "/registry"
+      ],
+      "expected": "013-pointer.expected-preimage.bin"
+    },
+    {
+      "id": "014-event-preimage",
+      "description": "Signing preimage for pointerlog.event (must cover required fields)",
+      "mode": "build-preimage",
+      "input": "014-event.input.json",
+      "signed_fields": [
+        "/log_id",
+        "/seq",
+        "/tool",
+        "/channel",
+        "/prev_root_cid",
+        "/new_root_cid",
+        "/descriptor_cid",
+        "/cid_profile",
+        "/issued_at_utc"
+      ],
+      "expected": "014-event.expected-preimage.bin"
+    },
+    {
+      "id": "015-checkpoint-preimage",
+      "description": "Signing preimage for pointerlog.checkpoint",
+      "mode": "build-preimage",
+      "input": "015-checkpoint.input.json",
+      "signed_fields": [
+        "/log_id",
+        "/size",
+        "/root_hash",
+        "/hash_alg",
+        "/issued_at_utc"
+      ],
+      "expected": "015-checkpoint.expected-preimage.bin"
+    },
+    {
+      "id": "016-attestation-preimage",
+      "description": "Signing preimage for attestation.envelope (subject + claims)",
+      "mode": "build-preimage",
+      "input": "016-attestation.input.json",
+      "signed_fields": [
+        "/subject",
+        "/claims"
+      ],
+      "expected": "016-attestation.expected-preimage.bin"
+    }
+  ]
+}

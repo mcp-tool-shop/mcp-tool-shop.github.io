@@ -1,0 +1,14 @@
+{
+  "result": "REJECT",
+  "error": {
+    "code": "REQUIRED_SIGNER_MISSING",
+    "what": "Attestation issuer key not in required signers list",
+    "why": {
+      "required_signers": [
+        "did:key:z6MkDIFFERENTKEY123456789"
+      ],
+      "attestation_issuer": "did:key:z6MkezcXcwofjwGsCmDCEW3pfXeRihWda2JwD6uooPNSCvDs"
+    },
+    "fix": "Obtain attestation from one of the required signers."
+  }
+}

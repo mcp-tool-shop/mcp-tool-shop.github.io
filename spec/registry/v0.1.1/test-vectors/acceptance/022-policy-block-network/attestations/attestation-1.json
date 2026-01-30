@@ -1,0 +1,48 @@
+{
+  "schema_version": "attestation.envelope.v0.1",
+  "subject": {
+    "root_cid": "bafyreifyfdhtyxiqponnoyme3bketuyv4uyh57tqghccl2kdhj2fsfh6oa",
+    "descriptor_cid": "bafyreianp5v6r33d7t63gflcraml6kxcvy5x7rtoa5lmhyjvkgzxiizwjq",
+    "cid_profile": {
+      "name": "mcp.cidprofile.default",
+      "version": "1",
+      "hash": "sha2-256",
+      "codec": "dag-cbor",
+      "base": "base32",
+      "normalization": {
+        "path_separator": "/",
+        "sort_entries": true,
+        "strip_timestamps": true,
+        "strip_owner": true,
+        "strip_permissions": true,
+        "reject_symlinks": true
+      }
+    }
+  },
+  "claims": [
+    {
+      "type": "mcp.claim.integrity",
+      "issued_at_utc": "2026-01-30T21:00:00Z",
+      "issuer": {
+        "key_id": "did:key:z6MkezcXcwofjwGsCmDCEW3pfXeRihWda2JwD6uooPNSCvDs",
+        "role": "verifier"
+      },
+      "payload": {
+        "kind": "integrity",
+        "verified_root_cid": "bafyreifyfdhtyxiqponnoyme3bketuyv4uyh57tqghccl2kdhj2fsfh6oa",
+        "verified_descriptor_cid": "bafyreianp5v6r33d7t63gflcraml6kxcvy5x7rtoa5lmhyjvkgzxiizwjq"
+      }
+    }
+  ],
+  "signatures": [
+    {
+      "key_id": "did:key:z6MkezcXcwofjwGsCmDCEW3pfXeRihWda2JwD6uooPNSCvDs",
+      "alg": "ed25519",
+      "sig": "A2YgEodEeRf-JENjZYu50iNfYvMl-SGeUHHT88Wpo2xIgnDP6AUB7rvq-lxxEm0tx0N6YrDt0Km7vVdqtaJcCw",
+      "signed_fields": [
+        "/subject",
+        "/claims"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mcp-tool-shop.github.io/mcp-registry-spec/schemas/registry.pointer.v0.1.json",
+  "title": "MCP Registry Pointer v0.1",
+  "description": "Registry-signed document pointing to the current version of tools.",
+  "type": "object",
+  "required": ["schema_version", "registry", "pointers", "signatures"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "registry.pointer.v0.1",
+      "description": "Schema version identifier"
+    },
+    "registry": {
+      "type": "object",
+      "description": "Registry identification",
+      "required": ["name", "generated_at_utc", "issuer"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Registry name"
+        },
+        "generated_at_utc": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When this pointer was generated (ISO 8601 UTC)"
+        },
+        "issuer": {
+          "type": "string",
+          "description": "Registry issuer identifier"
+        }
+      }
+    },
+    "pointers": {
+      "type": "array",
+      "description": "List of tool version pointers",
+      "items": {
+        "type": "object",
+        "required": ["tool", "channel", "root_cid", "descriptor_cid", "cid_profile", "updated_at_utc"],
+        "properties": {
+          "tool": {
+            "type": "string",
+            "description": "Tool identifier"
+          },
+          "channel": {
+            "type": "string",
+            "description": "Release channel (e.g., 'stable', 'beta', 'legacy-main')"
+          },
+          "root_cid": {
+            "type": "string",
+            "description": "CID of the manifest",
+            "pattern": "^bafyrei[a-z2-7]+$"
+          },
+          "descriptor_cid": {
+            "type": "string",
+            "description": "CID of the descriptor",
+            "pattern": "^bafyrei[a-z2-7]+$"
+          },
+          "cid_profile": {
+            "type": "object",
+            "description": "CID profile used",
+            "required": ["name", "version", "hash", "codec", "base"],
+            "properties": {
+              "name": { "type": "string" },
+              "version": { "type": "string" },
+              "hash": { "type": "string" },
+              "codec": { "type": "string" },
+              "base": { "type": "string" }
+            }
+          },
+          "updated_at_utc": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When this pointer was last updated (ISO 8601 UTC)"
+          },
+          "constraints": {
+            "type": "object",
+            "description": "Installation constraints",
+            "properties": {
+              "require_signers": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "List of key_ids that must have signed attestations"
+              },
+              "require_verifier_attestation": {
+                "type": "boolean",
+                "description": "Whether a verifier-role attestation is required"
+              },
+              "min_attestations": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Minimum number of valid attestations required"
+              }
+            }
+          }
+        }
+      }
+    },
+    "signatures": {
+      "type": "array",
+      "description": "Registry signatures",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["key_id", "alg", "sig", "signed_fields"],
+        "properties": {
+          "key_id": {
+            "type": "string",
+            "description": "did:key identifier of the registry",
+            "pattern": "^did:key:z[a-zA-Z0-9]+$"
+          },
+          "alg": {
+            "type": "string",
+            "const": "ed25519",
+            "description": "Signature algorithm"
+          },
+          "sig": {
+            "type": "string",
+            "description": "Base64url-encoded signature"
+          },
+          "signed_fields": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "JSON Pointers to fields included in signing preimage"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

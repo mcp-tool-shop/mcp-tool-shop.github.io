@@ -1,0 +1,91 @@
+{
+  "schema_version": "test-vector.manifest.v0.1",
+  "category": "canonical-json",
+  "vectors": [
+    {
+      "id": "001-key-ordering",
+      "description": "Object keys must be sorted by Unicode code point order",
+      "mode": "canonicalize-json",
+      "input": {
+        "z": 1,
+        "a": 2,
+        "m": 3
+      },
+      "expected": "{\"a\":2,\"m\":3,\"z\":1}"
+    },
+    {
+      "id": "002-number-normalization",
+      "description": "Numbers must serialize to shortest round-trip representation",
+      "mode": "canonicalize-json",
+      "input": {
+        "a": 1,
+        "b": 1,
+        "c": 10,
+        "d": 0.1
+      },
+      "expected": "{\"a\":1,\"b\":1,\"c\":10,\"d\":0.1}"
+    },
+    {
+      "id": "003-no-whitespace",
+      "description": "Canonical JSON must be minified with no spaces/newlines",
+      "mode": "canonicalize-json",
+      "input": {
+        "a": [
+          1,
+          2,
+          3
+        ],
+        "b": {
+          "c": true
+        }
+      },
+      "expected": "{\"a\":[1,2,3],\"b\":{\"c\":true}}"
+    },
+    {
+      "id": "004-unicode-sorting",
+      "description": "Unicode code point ordering applies to keys",
+      "mode": "canonicalize-json",
+      "input": {
+        "a": 1,
+        "Z": 2,
+        "Å": 3,
+        "ä": 4,
+        "😀": 5
+      },
+      "expected": "{\"Z\":2,\"a\":1,\"Å\":3,\"ä\":4,\"😀\":5}"
+    },
+    {
+      "id": "005-string-escaping",
+      "description": "Strings must escape only as required by JSON",
+      "mode": "canonicalize-json",
+      "input": {
+        "s": "line1\nline2\t\"quote\"\\backslash"
+      },
+      "expected": "{\"s\":\"line1\\nline2\\t\\\"quote\\\"\\\\backslash\"}"
+    },
+    {
+      "id": "006-reject-duplicate-keys",
+      "description": "Duplicate keys MUST be rejected",
+      "mode": "canonicalize-json",
+      "input": "006-reject-duplicate-keys.json",
+      "expected": {},
+      "expect_failure": "JSON_CANONICALIZATION_ERROR"
+    },
+    {
+      "id": "007-reject-nonfinite",
+      "description": "Non-finite numbers (NaN/Infinity) MUST be rejected",
+      "mode": "canonicalize-json",
+      "input": "007-reject-nonfinite.json",
+      "expected": {},
+      "expect_failure": "JSON_PARSE_ERROR"
+    },
+    {
+      "id": "008-reject-invalid-utf8",
+      "description": "Input that cannot be decoded as UTF-8 MUST be rejected",
+      "mode": "canonicalize-json",
+      "input": "008-reject-invalid-utf8.bin",
+      "expected": {},
+      "expect_failure": "JSON_PARSE_ERROR"
+    }
+  ]
+}

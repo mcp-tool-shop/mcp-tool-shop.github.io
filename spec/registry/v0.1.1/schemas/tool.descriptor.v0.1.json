@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mcp-tool-shop.github.io/mcp-registry-spec/schemas/tool.descriptor.v0.1.json",
+  "title": "MCP Tool Descriptor v0.1",
+  "description": "Metadata document describing an MCP tool, including its artifact reference, entrypoint, and security policy.",
+  "type": "object",
+  "required": ["schema_version", "tool", "artifact", "entrypoint", "schemas", "security"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "tool.descriptor.v0.1",
+      "description": "Schema version identifier"
+    },
+    "tool": {
+      "type": "object",
+      "description": "Tool identification metadata",
+      "required": ["name", "display_name", "version", "description", "license"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique tool identifier (reverse domain notation recommended)",
+          "pattern": "^[a-z][a-z0-9._-]*$"
+        },
+        "display_name": {
+          "type": "string",
+          "description": "Human-readable tool name"
+        },
+        "version": {
+          "type": "string",
+          "description": "Semantic version (semver)",
+          "pattern": "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9.-]+)?(\\+[a-zA-Z0-9.-]+)?$"
+        },
+        "description": {
+          "type": "string",
+          "description": "Brief description of the tool's purpose"
+        },
+        "license": {
+          "type": "string",
+          "description": "SPDX license identifier"
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "description": "Reference to the tool bundle",
+      "required": ["root_cid", "cid_profile", "media_type", "size_bytes"],
+      "properties": {
+        "root_cid": {
+          "type": "string",
+          "description": "CID of the toolbundle.manifest (computed per §4.2.3)",
+          "pattern": "^bafyrei[a-z2-7]+$"
+        },
+        "cid_profile": {
+          "type": "object",
+          "description": "CID computation profile used for the artifact",
+          "required": ["name", "version", "hash", "codec", "base"],
+          "properties": {
+            "name": { "type": "string" },
+            "version": { "type": "string" },
+            "hash": { "type": "string" },
+            "codec": { "type": "string" },
+            "base": { "type": "string" }
+          }
+        },
+        "media_type": {
+          "type": "string",
+          "description": "MIME type of the bundle",
+          "enum": ["application/vnd.mcp.toolbundle+car", "application/vnd.mcp.toolbundle+tar+zstd"]
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total bundle size in bytes"
+        }
+      }
+    },
+    "entrypoint": {
+      "type": "object",
+      "description": "How to invoke the tool",
+      "required": ["runtime", "target"],
+      "properties": {
+        "runtime": {
+          "type": "string",
+          "enum": ["node", "deno", "python", "native"],
+          "description": "Execution runtime"
+        },
+        "target": {
+          "type": "string",
+          "description": "Path to entrypoint file, optionally with export (e.g., 'dist/tool.js:handle')"
+        }
+      }
+    },
+    "schemas": {
+      "type": "object",
+      "description": "Input/output schema references",
+      "required": ["request", "response"],
+      "properties": {
+        "request": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "cid"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Schema name"
+              },
+              "cid": {
+                "type": "string",
+                "description": "CID of the JSON Schema document"
+              }
+            }
+          }
+        },
+        "response": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "cid"],
+            "properties": {
+              "name": { "type": "string" },
+              "cid": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "description": "Security policy declarations",
+      "required": ["policy"],
+      "properties": {
+        "policy": {
+          "type": "object",
+          "required": ["network", "filesystem", "exec"],
+          "properties": {
+            "network": {
+              "type": "string",
+              "enum": ["deny", "allow"],
+              "description": "Network access requirement"
+            },
+            "filesystem": {
+              "type": "string",
+              "enum": ["deny", "read_only", "read_write"],
+              "description": "Filesystem access requirement"
+            },
+            "exec": {
+              "type": "string",
+              "enum": ["deny", "allow"],
+              "description": "Subprocess execution requirement"
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

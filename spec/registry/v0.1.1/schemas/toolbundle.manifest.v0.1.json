@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mcp-tool-shop.github.io/mcp-registry-spec/schemas/toolbundle.manifest.v0.1.json",
+  "title": "MCP Tool Bundle Manifest v0.1",
+  "description": "Manifest listing all files in a tool bundle with their CIDs. This document's identity is defined by its preimage per verifier-rulebook §4.2.3.",
+  "type": "object",
+  "required": ["schema_version", "cid_profile", "entries", "descriptor_cid", "root_cid"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "toolbundle.manifest.v0.1",
+      "description": "Schema version identifier. Included in CID preimage."
+    },
+    "cid_profile": {
+      "type": "object",
+      "description": "CID computation profile. Included in CID preimage.",
+      "required": ["name", "version", "hash", "codec", "base"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Profile name (e.g., 'mcp.cidprofile.default')"
+        },
+        "version": {
+          "type": "string",
+          "description": "Profile version"
+        },
+        "hash": {
+          "type": "string",
+          "description": "Hash algorithm (e.g., 'sha2-256')"
+        },
+        "codec": {
+          "type": "string",
+          "description": "IPLD codec (e.g., 'dag-cbor')"
+        },
+        "base": {
+          "type": "string",
+          "description": "Multibase encoding (e.g., 'base32')"
+        },
+        "normalization": {
+          "type": "object",
+          "description": "File normalization rules for deterministic bundling",
+          "properties": {
+            "path_separator": {
+              "type": "string",
+              "const": "/",
+              "description": "Path separator (always forward slash)"
+            },
+            "sort_entries": {
+              "type": "boolean",
+              "description": "Whether entries are sorted by path"
+            },
+            "strip_timestamps": {
+              "type": "boolean",
+              "description": "Whether file timestamps are stripped"
+            },
+            "strip_owner": {
+              "type": "boolean",
+              "description": "Whether file owner info is stripped"
+            },
+            "strip_permissions": {
+              "type": "boolean",
+              "description": "Whether file permissions are normalized"
+            },
+            "reject_symlinks": {
+              "type": "boolean",
+              "description": "Whether symlinks are rejected"
+            }
+          }
+        }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "description": "List of files in the bundle, sorted by path. Included in CID preimage.",
+      "items": {
+        "type": "object",
+        "required": ["path", "blob_cid", "size_bytes", "executable"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Relative path within bundle (forward slashes only)",
+            "pattern": "^[^\\\\]+$"
+          },
+          "blob_cid": {
+            "type": "string",
+            "description": "CID of the file content (raw codec)",
+            "pattern": "^bafkrei[a-z2-7]+$"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "File size in bytes"
+          },
+          "executable": {
+            "type": "boolean",
+            "description": "Whether the file should be executable"
+          }
+        }
+      }
+    },
+    "descriptor_cid": {
+      "type": "string",
+      "description": "Derived/linkage field. CID of the tool.descriptor that references this manifest. MUST NOT be included in the manifest CID preimage (Rulebook §4.2.3). Verifiers use this for linkage verification.",
+      "pattern": "^bafyrei[a-z2-7]+$"
+    },
+    "root_cid": {
+      "type": "string",
+      "description": "Derived field. MUST equal the CID of the manifest preimage (Rulebook §4.2.3). This field MUST NOT be included in the manifest CID preimage. Computed over {schema_version, cid_profile, entries} only.",
+      "pattern": "^bafyrei[a-z2-7]+$"
+    }
+  },
+  "additionalProperties": false
+}
