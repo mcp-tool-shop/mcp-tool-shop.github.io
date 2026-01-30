@@ -64,7 +64,7 @@ mcp-tool-shop.github.io/
 ├── images/                 # Image assets
 ├── performance/            # Performance analytics
 ├── comfy-headless.html     # Tool pages
-├── dev-brain.html
+├── brain-dev.html
 ├── file-compass.html
 ├── tool-compass.html
 ├── voice-soundboard.html
