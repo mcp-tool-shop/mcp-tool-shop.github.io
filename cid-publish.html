@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publish a CID-Verified Tool - MCP Tool Shop</title>
+    <meta name="description" content="How to publish a tool bundle, produce attestations, and verify locally using the CID Registry Spec v0.1.1.">
+    <link rel="canonical" href="https://mcptoolshop.com/cid-publish.html">
+    <link rel="icon" type="image/png" href="/images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e4e4e7;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+        header {
+            padding: 24px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 40px;
+        }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo {
+            display: flex; align-items: center; gap: 12px;
+            font-size: 1.5rem; font-weight: 700;
+            text-decoration: none; color: #fff;
+        }
+        .logo img { width: 32px; height: 32px; }
+        nav a {
+            color: #a1a1aa; text-decoration: none; margin-left: 32px;
+            transition: color 0.3s;
+        }
+        nav a:hover { color: #fff; }
+        h1 {
+            font-size: 2rem; margin-bottom: 12px;
+            background: linear-gradient(135deg, #10b981 0%, #60a5fa 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .subtitle { color: #a1a1aa; margin-bottom: 40px; }
+        section { margin-bottom: 48px; }
+        h2 {
+            font-size: 1.25rem; margin-bottom: 16px; color: #fff;
+            display: flex; align-items: center; gap: 12px;
+        }
+        h2 .step {
+            width: 28px; height: 28px;
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 50%; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 0.875rem; color: #10b981;
+        }
+        .code-block {
+            background: #0d0d14; border-radius: 8px;
+            padding: 20px; margin-bottom: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem; overflow-x: auto;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .code-comment { color: #6b7280; }
+        .code-cmd { color: #10b981; }
+        .code-flag { color: #60a5fa; }
+        .code-string { color: #fbbf24; }
+        p { margin-bottom: 12px; color: #a1a1aa; }
+        a { color: #60a5fa; }
+        .note {
+            background: rgba(96, 165, 250, 0.1);
+            border-left: 3px solid #60a5fa;
+            padding: 12px 16px; margin: 16px 0;
+            font-size: 0.875rem;
+        }
+        footer {
+            padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center; color: #71717a;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <a href="/" class="logo">
+                <img src="/images/logo.png" alt="MCP Tool Shop">
+                MCP Tool Shop
+            </a>
+            <nav>
+                <a href="/cid-registry.html">Spec</a>
+                <a href="/registry.html">Registry</a>
+                <a href="https://github.com/mcp-tool-shop">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Publisher Quickstart</h1>
+        <p class="subtitle">Publish a CID-verified tool in 3 steps</p>
+
+        <section>
+            <h2><span class="step">1</span> Create the tool bundle</h2>
+            <p>Package your tool files and compute the manifest CID.</p>
+            <div class="code-block">
+<span class="code-comment"># Install the packer (reference implementation)</span>
+<span class="code-cmd">npm install</span> <span class="code-flag">-g</span> @mcp-tool-shop/packer
+
+<span class="code-comment"># Pack your tool directory</span>
+<span class="code-cmd">mcp-pack</span> ./my-tool <span class="code-flag">--output</span> my-tool.car
+
+<span class="code-comment"># Output:</span>
+<span class="code-comment">#   root_cid: bafyrei...</span>
+<span class="code-comment">#   descriptor_cid: bafyrei...</span>
+<span class="code-comment">#   manifest: my-tool.manifest.json</span>
+<span class="code-comment">#   descriptor: my-tool.descriptor.json</span>
+            </div>
+            <div class="note">
+                The manifest CID is computed over <code>{schema_version, cid_profile, entries}</code> only.
+                See <a href="/spec/registry/v0.1.1/docs/verifier-rulebook.v0.1.md">Rulebook §4.2.3</a>.
+            </div>
+        </section>
+
+        <section>
+            <h2><span class="step">2</span> Produce an attestation</h2>
+            <p>Sign an integrity claim with your Ed25519 key.</p>
+            <div class="code-block">
+<span class="code-comment"># Generate a key pair (if you don't have one)</span>
+<span class="code-cmd">mcp-keygen</span> <span class="code-flag">--output</span> my-key.json
+
+<span class="code-comment"># Create and sign an attestation</span>
+<span class="code-cmd">mcp-attest</span> \
+  <span class="code-flag">--root-cid</span> bafyrei... \
+  <span class="code-flag">--descriptor-cid</span> bafyrei... \
+  <span class="code-flag">--key</span> my-key.json \
+  <span class="code-flag">--role</span> maintainer \
+  <span class="code-flag">--output</span> attestation.json
+            </div>
+            <div class="note">
+                Attestations use the signing preimage format from <a href="/spec/registry/v0.1.1/docs/verifier-rulebook.v0.1.md">Rulebook §3</a>.
+                The <code>signed_fields</code> array specifies which JSON Pointers are covered.
+            </div>
+        </section>
+
+        <section>
+            <h2><span class="step">3</span> Verify locally</h2>
+            <p>Run the verifier to confirm everything passes.</p>
+            <div class="code-block">
+<span class="code-comment"># Clone the reference verifier</span>
+<span class="code-cmd">git clone</span> https://github.com/mcp-tool-shop/mcp-registry-spec.git
+<span class="code-cmd">cd</span> mcp-registry-spec/verifier
+<span class="code-cmd">npm install</span> && <span class="code-cmd">npm run build</span>
+
+<span class="code-comment"># Verify your bundle</span>
+<span class="code-cmd">npm run verify</span> <span class="code-flag">--</span> \
+  <span class="code-flag">--pointer</span> pointer.json \
+  <span class="code-flag">--descriptor</span> my-tool.descriptor.json \
+  <span class="code-flag">--manifest</span> my-tool.manifest.json \
+  <span class="code-flag">--attestation</span> attestation.json
+
+<span class="code-comment"># Expected output:</span>
+<span class="code-comment">#   result: ACCEPT</span>
+<span class="code-comment">#   provenance:</span>
+<span class="code-comment">#     tool: my-tool</span>
+<span class="code-comment">#     root_cid: bafyrei...</span>
+            </div>
+        </section>
+
+        <section>
+            <h2>Run conformance vectors</h2>
+            <p>Verify your implementation against the official test suite.</p>
+            <div class="code-block">
+<span class="code-cmd">cd</span> mcp-registry-spec/verifier
+<span class="code-cmd">npm test</span>
+
+<span class="code-comment"># Expected:</span>
+<span class="code-comment"># tests 24</span>
+<span class="code-comment"># pass 24</span>
+<span class="code-comment"># fail 0</span>
+            </div>
+        </section>
+
+        <section>
+            <h2>Resources</h2>
+            <div class="code-block" style="background: transparent; border: 1px solid rgba(255,255,255,0.1);">
+Spec Landing Page    <a href="/cid-registry.html">/cid-registry.html</a>
+Verifier Rulebook    <a href="/spec/registry/v0.1.1/docs/verifier-rulebook.v0.1.md">/spec/registry/v0.1.1/docs/verifier-rulebook.v0.1.md</a>
+JSON Schemas         <a href="/spec/registry/v0.1.1/schemas/">/spec/registry/v0.1.1/schemas/</a>
+Test Vectors         <a href="/spec/registry/v0.1.1/test-vectors/">/spec/registry/v0.1.1/test-vectors/</a>
+Latest Version       <a href="/spec/registry/latest.json">/spec/registry/latest.json</a>
+Checksums            <a href="/spec/registry/v0.1.1/checksums.sha256">/spec/registry/v0.1.1/checksums.sha256</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p><a href="/cid-registry.html">CID Registry Spec v0.1.1</a> · MIT License</p>
+        </div>
+    </footer>
+</body>
+</html>
