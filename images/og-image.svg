@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a12"/>
+      <stop offset="50%" stop-color="#13131f"/>
+      <stop offset="100%" stop-color="#1a1a2e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="rgba(139,92,246,0.3)"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <!-- Logo hexagon -->
+  <g transform="translate(600,220)">
+    <polygon points="0,-55 47.6,-27.5 47.6,27.5 0,55 -47.6,27.5 -47.6,-27.5" fill="none" stroke="url(#accent)" stroke-width="6" stroke-linejoin="round"/>
+    <circle cx="0" cy="0" r="14" fill="url(#accent)"/>
+    <circle cx="0" cy="-55" r="8" fill="url(#accent)"/>
+    <circle cx="47.6" cy="27.5" r="8" fill="url(#accent)"/>
+    <circle cx="-47.6" cy="27.5" r="8" fill="url(#accent)"/>
+  </g>
+  <!-- Text -->
+  <text x="600" y="340" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="56" font-weight="800" fill="white">MCP Tool Shop</text>
+  <text x="600" y="400" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="28" fill="#a1a1aa">AI Tools for the Agentic Future</text>
+  <!-- Badges -->
+  <g transform="translate(600,470)">
+    <rect x="-300" y="-18" width="130" height="36" rx="18" fill="rgba(139,92,246,0.15)" stroke="rgba(139,92,246,0.3)" stroke-width="1"/>
+    <text x="-235" y="6" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="500" fill="#c4b5fd">Open Source</text>
+    <rect x="-140" y="-18" width="130" height="36" rx="18" fill="rgba(139,92,246,0.15)" stroke="rgba(139,92,246,0.3)" stroke-width="1"/>
+    <text x="-75" y="6" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="500" fill="#c4b5fd">20 Packages</text>
+    <rect x="20" y="-18" width="130" height="36" rx="18" fill="rgba(139,92,246,0.15)" stroke="rgba(139,92,246,0.3)" stroke-width="1"/>
+    <text x="85" y="6" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="500" fill="#c4b5fd">MCP Ready</text>
+    <rect x="180" y="-18" width="130" height="36" rx="18" fill="rgba(139,92,246,0.15)" stroke="rgba(139,92,246,0.3)" stroke-width="1"/>
+    <text x="245" y="6" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="500" fill="#c4b5fd">MIT License</text>
+  </g>
+  <!-- URL -->
+  <text x="600" y="570" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" fill="#71717a">mcptoolshop.com</text>
+</svg>
